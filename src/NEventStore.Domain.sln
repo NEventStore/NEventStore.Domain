@@ -1,0 +1,54 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.30110.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NEventStore", "NEventStore\NEventStore.csproj", "{03946843-F343-419C-88EF-3E446D08DFA6}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{08A28C69-B04C-4622-8BF7-C9C4C410E64C}"
+	ProjectSection(SolutionItems) = preProject
+		.nuget\NEventStore.Domain.nuspec = .nuget\NEventStore.Domain.nuspec
+		.nuget\NuGet.Config = .nuget\NuGet.Config
+		.nuget\NuGet.targets = .nuget\NuGet.targets
+		.nuget\packages.config = .nuget\packages.config
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NEventStore.Domain", "NEventStore.Domain\NEventStore.Domain.csproj", "{214B41F6-70DB-48F9-A110-E3F6B0339DF0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NEventStore.Domain.Tests", "NEventStore.Domain.Tests\NEventStore.Domain.Tests.csproj", "{C1FAACBD-1050-448A-980B-DB5B5F9A3F15}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NEventStore.Persistence.AcceptanceTests", "NEventStore.Persistence.AcceptanceTests\NEventStore.Persistence.AcceptanceTests.csproj", "{3FE594FE-16FF-4405-97D5-5A58FB12520B}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".core", ".core", "{CFBBB291-5AA2-4CC0-8FA0-A0522514D5E3}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{03946843-F343-419C-88EF-3E446D08DFA6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{03946843-F343-419C-88EF-3E446D08DFA6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{03946843-F343-419C-88EF-3E446D08DFA6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{03946843-F343-419C-88EF-3E446D08DFA6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{214B41F6-70DB-48F9-A110-E3F6B0339DF0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{214B41F6-70DB-48F9-A110-E3F6B0339DF0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{214B41F6-70DB-48F9-A110-E3F6B0339DF0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{214B41F6-70DB-48F9-A110-E3F6B0339DF0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C1FAACBD-1050-448A-980B-DB5B5F9A3F15}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C1FAACBD-1050-448A-980B-DB5B5F9A3F15}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C1FAACBD-1050-448A-980B-DB5B5F9A3F15}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C1FAACBD-1050-448A-980B-DB5B5F9A3F15}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3FE594FE-16FF-4405-97D5-5A58FB12520B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3FE594FE-16FF-4405-97D5-5A58FB12520B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3FE594FE-16FF-4405-97D5-5A58FB12520B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3FE594FE-16FF-4405-97D5-5A58FB12520B}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{03946843-F343-419C-88EF-3E446D08DFA6} = {CFBBB291-5AA2-4CC0-8FA0-A0522514D5E3}
+		{3FE594FE-16FF-4405-97D5-5A58FB12520B} = {CFBBB291-5AA2-4CC0-8FA0-A0522514D5E3}
+	EndGlobalSection
+EndGlobal

@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+  <metadata>
+    <id>NEventStore</id>
+    <version>5.0</version>
+    <title>NEventStore Domain</title>
+    <authors>NEventStore Dev Team</authors>
+    <owners>NEventStore Dev Team</owners>
+    <projectUrl>http://neventstore.org</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>A recipe for implementing event sourced domain objects with NEventStore.</description>
+    <summary>A recipe for implementing event sourced domain objects with NEventStore.</summary>
+    <language>es-US</language>
+    <tags>events, event sourcing, cqrs, storage, persistence, database, ddd, domain</tags>
+	<releaseNotes></releaseNotes>
+  <dependencies>
+    <dependency id="NEventStore" version="5.2" />
+  </dependencies>
+  </metadata>
+  <files>
+    <file src="publish-net40\bin\**" target="lib\net40"/>
+  </files>  
+</package>
