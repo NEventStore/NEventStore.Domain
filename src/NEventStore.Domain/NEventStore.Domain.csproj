@@ -76,7 +76,7 @@
     <Compile Include="StringExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\NEventStore\NEventStore.csproj">
+    <ProjectReference Include="..\..\dependencies\NEventStore\src\NEventStore\NEventStore.csproj">
       <Project>{03946843-f343-419c-88ef-3e446d08dfa6}</Project>
       <Name>NEventStore</Name>
     </ProjectReference>

@@ -61,11 +61,11 @@
       <Project>{214b41f6-70db-48f9-a110-e3f6b0339df0}</Project>
       <Name>NEventStore.Domain</Name>
     </ProjectReference>
-    <ProjectReference Include="..\NEventStore.Persistence.AcceptanceTests\NEventStore.Persistence.AcceptanceTests.csproj">
+    <ProjectReference Include="..\..\dependencies\NEventStore\src\NEventStore.Persistence.AcceptanceTests\NEventStore.Persistence.AcceptanceTests.csproj">
       <Project>{3fe594fe-16ff-4405-97d5-5a58fb12520b}</Project>
       <Name>NEventStore.Persistence.AcceptanceTests</Name>
     </ProjectReference>
-    <ProjectReference Include="..\NEventStore\NEventStore.csproj">
+    <ProjectReference Include="..\..\dependencies\NEventStore\src\NEventStore\NEventStore.csproj">
       <Project>{03946843-f343-419c-88ef-3e446d08dfa6}</Project>
       <Name>NEventStore</Name>
     </ProjectReference>
