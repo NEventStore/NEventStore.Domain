@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
   <metadata>
-    <id>NEventStore</id>
+    <id>NEventStore.Domain</id>
     <version>5.0</version>
     <title>NEventStore Domain</title>
     <authors>NEventStore Dev Team</authors>
