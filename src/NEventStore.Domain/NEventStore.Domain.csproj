@@ -46,8 +46,8 @@
     <Compile Include="..\GlobalSuppressions.cs">
       <Link>Properties\GlobalSuppressions.cs</Link>
     </Compile>
-    <Compile Include="..\VersionAssemblyInfo.cs">
-      <Link>Properties\VersionAssemblyInfo.cs</Link>
+    <Compile Include="..\AssemblyInfo.cs">
+      <Link>Properties\AssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="Core\AggregateBase.cs" />
     <Compile Include="Core\ConflictDetector.cs" />
@@ -72,7 +72,7 @@
     <Compile Include="Persistence\PersistenceException.cs" />
     <Compile Include="Persistence\RepositoryExtensions.cs" />
     <Compile Include="Persistence\SagaRepositoryExtensions.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\ProjectAssemblyInfo.cs" />
     <Compile Include="StringExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
