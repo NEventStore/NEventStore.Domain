@@ -58,6 +58,7 @@
     <Compile Include="Persistence\SagaFactory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TestAggregate.cs" />
+    <Compile Include="TestExtensions.cs" />
     <Compile Include="TestSaga.cs" />
   </ItemGroup>
   <ItemGroup>

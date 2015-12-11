@@ -16,11 +16,14 @@
 			this.RaiseEvent(new TestAggregateCreatedEvent { Id = this.Id, Name = name });
 		}
 
+        /// <summary>
+        /// State should be private, but this is a Test Aggregate and we need a way to probe for it
+        /// </summary>
 		public string Name { get; set; }
 
 		public void ChangeName(string newName)
 		{
-			this.RaiseEvent(new NameChangedEvent { Name = newName });
+			this.RaiseEvent(new NameChangedEvent { Id = this.Id, Name = newName });
 		}
 
 		private void Apply(TestAggregateCreatedEvent @event)
@@ -35,12 +38,22 @@
 	}
 
 	public interface IDomainEvent
-	{}
+	{
+        /// <summary>
+        /// technically the Id is not really needed
+        /// you need to know it up-front to create the Aggregate
+        /// and to load the Stream, nonetheless you need to 
+        /// identify the aggregate that raised the event in the rest of the program.
+        /// </summary>
+        Guid Id { get; set; }
+    }
 
 	[Serializable]
 	public class NameChangedEvent : IDomainEvent
 	{
-		public string Name { get; set; }
+        public Guid Id { get; set; }
+
+        public string Name { get; set; }
 	}
 
 	[Serializable]
