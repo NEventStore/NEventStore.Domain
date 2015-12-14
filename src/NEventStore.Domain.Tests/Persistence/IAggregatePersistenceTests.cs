@@ -9,7 +9,7 @@
     using Xunit;
     using Xunit.Should;
 
-    public class using_a_configured_repository : SpecificationBase
+    public abstract class using_a_configured_repository : SpecificationBase
     {
         protected IRepository _repository;
 
@@ -42,6 +42,24 @@
 
         [Fact]
         public void should_be_returned_when_loaded_by_id()
+        {
+            _repository.GetById<TestAggregate>(_id).ShouldNotBeNull();
+        }
+
+        [Fact]
+        public void version_should_be_one()
+        {
+            _repository.GetById<TestAggregate>(_id).Version.ShouldBe(1);
+        }
+
+        [Fact]
+        public void id_should_be_set()
+        {
+            _repository.GetById<TestAggregate>(_id).Id.ShouldBe(_id);
+        }
+
+        [Fact]
+        public void should_have_name_set()
         {
             _repository.GetById<TestAggregate>(_id).Name.ShouldBe(_testAggregate.Name);
         }
