@@ -20,7 +20,7 @@
 		}
 	}
 
-	public class when_an_aggregate_is_loaded : using_a_sagaeventstorerepository
+	public class when_a_saga_is_loaded : using_a_sagaeventstorerepository
 	{
 		private TestSaga _testSaga;
 

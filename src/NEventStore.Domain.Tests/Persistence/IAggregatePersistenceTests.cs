@@ -218,7 +218,7 @@
         }
     }
 
-    public class when_an_aggregate_is_created_and_persisted_twice_concurrently : SpecificationBase
+    public class when_the_same_aggregate_is_created_and_persisted_concurrently : SpecificationBase
     {
         protected IRepository _repository1;
         protected IRepository _repository2;
