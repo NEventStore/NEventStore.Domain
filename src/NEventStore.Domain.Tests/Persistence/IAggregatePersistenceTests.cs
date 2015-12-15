@@ -155,6 +155,58 @@
         }
     }
 
+    public class when_an_aggregate_is_persisted_by_two_repositories : SpecificationBase
+    {
+        protected IRepository _repository1;
+        protected IRepository _repository2;
+
+        protected IStoreEvents _storeEvents;
+        private Guid _aggregateId;
+        private TestAggregate aggregate;
+        private Exception _thrown;
+
+        protected override void Context()
+        {
+            base.Context();
+
+            this._storeEvents = Wireup.Init().UsingInMemoryPersistence().Build();
+            this._repository1 = new EventStoreRepository(this._storeEvents, new AggregateFactory(), new ConflictDetector());
+            this._repository2 = new EventStoreRepository(this._storeEvents, new AggregateFactory(), new ConflictDetector());
+
+            _aggregateId = Guid.NewGuid();
+            aggregate = new TestAggregate(_aggregateId, "my name is..");
+        }
+
+        protected override void Because()
+        {
+            _repository1.Save(aggregate, Guid.NewGuid());
+            aggregate.ChangeName("one");
+
+            _thrown = Catch.Exception(() => _repository2.Save(aggregate, Guid.NewGuid()));
+        }
+
+        [Fact]
+        public void should_not_throw_a_ConflictingCommandException()
+        {
+            _thrown.ShouldBeNull();
+        }
+
+        [Fact]
+        public void should_have_updated_name_if_loaded_by_repository_that_saved_it_last()
+        {
+            _repository2.GetById<TestAggregate>(_aggregateId).Name.ShouldBe("one");
+        }
+
+        /// <summary>
+        /// current repository implementation act as a session cache!
+        /// </summary>
+        [Fact]
+        public void should_have_original_name_if_loaded_by_repository_that_saved_it_first()
+        {
+            _repository1.GetById<TestAggregate>(_aggregateId).Name.ShouldBe("my name is..");
+        }
+    }
+
     public class when_an_aggregate_is_persisted_concurrently_by_two_clients : SpecificationBase
     {
         protected IRepository _repository1;
