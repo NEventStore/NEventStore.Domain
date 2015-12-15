@@ -8,7 +8,7 @@
     using NEventStore.Persistence.AcceptanceTests.BDD;
     using Xunit;
     using Xunit.Should;
-
+    
     public abstract class using_a_configured_repository : SpecificationBase
     {
         protected IRepository _repository;
@@ -152,6 +152,55 @@
         public void should_be_returned_when_loaded_by_id()
         {
             _repository.GetById<TestAggregate>(_bucket, _id).Name.ShouldBe(_testAggregate.Name);
+        }
+    }
+
+    /// <summary>
+    /// Idempotency Check:
+    /// Internally a DuplicateCommitException will be raised and catch by the repository,
+    /// the whole commit will be discarded, we assume the it's the same commit issued twice.
+    /// 
+    /// Issue: #4
+    /// </summary>
+    public class when_an_aggregate_is_persisted_using_the_same_commitId_twice : using_a_configured_repository
+    {
+        private TestAggregate _testAggregate;
+
+        private Guid _id;
+
+        protected override void Context()
+        {
+            base.Context();
+            _id = Guid.NewGuid();
+            _testAggregate = new TestAggregate(_id, "Test");
+        }
+
+        protected override void Because()
+        {
+            var commitId = Guid.NewGuid();
+            _repository.Save(_testAggregate, commitId, null);
+
+            _testAggregate.ChangeName("one");
+
+            _repository.Save(_testAggregate, commitId);
+        }
+
+        [Fact]
+        public void the_second_commit_was_silently_discarded_and_not_written_to_database()
+        {
+            var aggregate = _repository.GetById<TestAggregate>(_id);
+            aggregate.Name.ShouldBe("Test");
+            aggregate.Version.ShouldBe(1);
+        }
+
+        [Fact]
+        public void the_aggregate_still_has_pending_changes()
+        {
+            var uncommittedEvents = ((IAggregate)_testAggregate).GetUncommittedEvents();
+            uncommittedEvents.ShouldNotBeEmpty();
+            var enumerator = uncommittedEvents.GetEnumerator();
+            enumerator.MoveNext();
+            enumerator.Current.ShouldBeInstanceOf<NameChangedEvent>();
         }
     }
 
