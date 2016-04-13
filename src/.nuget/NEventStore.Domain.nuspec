@@ -14,7 +14,7 @@
     <tags>events, event sourcing, cqrs, storage, persistence, database, ddd, domain</tags>
 	<releaseNotes></releaseNotes>
   <dependencies>
-    <dependency id="NEventStore" version="5.2" />
+    <dependency id="NEventStore" version="6.0.0" />
   </dependencies>
   </metadata>
   <files>
