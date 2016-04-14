@@ -8,7 +8,7 @@ properties {
     $sln_file = "$src_directory\NEventStore.Domain.sln"
     $target_config = "Release"
     $framework_version = "v4.0"
-    $assemblyInfoFilePath = "$src_directory\VersionAssemblyInfo.cs"
+    $assemblyInfoFilePath = "$src_directory\AssemblyInfo.cs"
 
     $xunit_path = "$base_directory\bin\xunit.runners.1.9.1\tools\xunit.console.clr4.exe"
     $ilMergeModule.ilMergePath = "$base_directory\bin\ilmerge-bin\ILMerge.exe"
