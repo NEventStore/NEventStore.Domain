@@ -1,6 +1,5 @@
 Param(
-	[string]$task,
-	[string]$buildNumber = 0)
+	[string]$task)
 
 if($task -eq $null) {
 	$task = read-host "Enter Task"
@@ -8,5 +7,4 @@ if($task -eq $null) {
 
 $scriptPath = $(Split-Path -parent $MyInvocation.MyCommand.path)
 
-.$scriptPath\..\dependencies\RestorePackages.ps1
-. .\build\psake.ps1 -scriptPath $scriptPath -t $task -properties @{ build_number=$buildNumber }
+. .\build\psake.ps1 -scriptPath $scriptPath -t $task
