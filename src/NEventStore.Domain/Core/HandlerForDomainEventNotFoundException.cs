@@ -3,6 +3,7 @@ namespace NEventStore.Domain.Core
     using System;
     using System.Runtime.Serialization;
 
+    [Serializable]
     public class HandlerForDomainEventNotFoundException : Exception
 	{
 		public HandlerForDomainEventNotFoundException()
