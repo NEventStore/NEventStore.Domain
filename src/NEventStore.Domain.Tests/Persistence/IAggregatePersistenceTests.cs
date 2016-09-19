@@ -18,7 +18,12 @@
         protected override void Context()
         {
             this._storeEvents = Wireup.Init().UsingInMemoryPersistence().Build();
-            this._repository = new EventStoreRepository(this._storeEvents, new AggregateFactory(), new ConflictDetector());
+            this._repository = CreateRepository();
+        }
+
+        protected EventStoreRepository CreateRepository()
+        {
+            return new EventStoreRepository(this._storeEvents, new AggregateFactory(), new ConflictDetector());
         }
     }
 
@@ -357,6 +362,7 @@
             _aggregateId = Guid.NewGuid();
         }
 
+
         protected override void Because()
         {
             var agg1 = new TestAggregate(_aggregateId, "one");
@@ -371,6 +377,44 @@
         public void should_throw_a_ConflictingCommandException()
         {
             _thrown.ShouldBeInstanceOf<ConflictingCommandException>();
+        }
+    }
+
+    public class when_aggregate_is_reloaded_with_snapshot : using_a_configured_repository
+    {
+        private TestAggregate _testAggregate;
+        private TestAggregate _reloadedAggregate;
+        private Guid _id;
+
+        protected override void Context()
+        {
+            base.Context();
+            _id = Guid.NewGuid();
+            _testAggregate = new TestAggregate(_id, "Test");
+            _repository.Save(_testAggregate, Guid.NewGuid()); //save at version 1.
+        }
+
+        protected override void Because()
+        {
+            var otherRepository = CreateRepository();
+            var aggregate = otherRepository.GetById<TestAggregate>(_id); //load at version 1
+            aggregate.ChangeName("Name changed");
+            otherRepository.Save(Bucket.Default, aggregate, Guid.NewGuid()); //save in version 2
+            //Now save the snapshot.
+
+            var memento = ((IAggregate)aggregate).GetSnapshot();
+            var snapshot = new Snapshot(Bucket.Default, aggregate.Id.ToString(), aggregate.Version, memento);
+
+            _storeEvents.Advanced.AddSnapshot(snapshot);
+
+            //now reload, 
+            _reloadedAggregate = otherRepository.GetById<TestAggregate>(_id);
+        }
+
+        [Fact]
+        public void should_have_correct_version()
+        {
+            _reloadedAggregate.Version.ShouldBe(2);
         }
     }
 }
