@@ -1,0 +1,41 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard1.6</TargetFramework>
+    <RootNamespace>NEventStore.Domain</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Persistence\EventStore\ExceptionMessages.Designer.cs" />
+    <Compile Remove="Persistence\EventStore\ExceptionMessages1.Designer.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Remove="Persistence\EventStore\ExceptionMessages.resx" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\dependencies\NEventStore\src\NEventStore\NEventStore.Core.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Persistence\EventStore\Resources\Core\ExceptionMessages.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>ExceptionMessages.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="Persistence\EventStore\Resources\Core\ExceptionMessages.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>ExceptionMessages.Designer.cs</LastGenOutput>
+      <CustomToolNamespace>NEventStore.Domain.Persistence.EventStore</CustomToolNamespace>
+    </EmbeddedResource>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Update="NETStandard.Library" Version="1.6.1" />
+  </ItemGroup>
+
+</Project>

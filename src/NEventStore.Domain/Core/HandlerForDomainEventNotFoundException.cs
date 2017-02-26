@@ -17,8 +17,10 @@ namespace NEventStore.Domain.Core
 			: base(message, innerException)
 		{}
 
+#if !NETSTANDARD1_6
 		public HandlerForDomainEventNotFoundException(SerializationInfo info, StreamingContext context)
 			: base(info, context)
 		{}
+#endif
 	}
 }

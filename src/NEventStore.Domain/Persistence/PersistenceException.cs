@@ -32,6 +32,7 @@ namespace NEventStore.Domain.Persistence
 			: base(message, innerException)
 		{}
 
+#if !NETSTANDARD1_6
 		/// <summary>
 		///   Initializes a new instance of the PersistenceException class.
 		/// </summary>
@@ -40,5 +41,6 @@ namespace NEventStore.Domain.Persistence
 		protected PersistenceException(SerializationInfo info, StreamingContext context)
 			: base(info, context)
 		{}
+#endif
 	}
 }

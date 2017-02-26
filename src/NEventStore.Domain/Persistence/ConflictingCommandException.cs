@@ -32,6 +32,7 @@ namespace NEventStore.Domain.Persistence
 			: base(message, innerException)
 		{}
 
+#if !NETSTANDARD1_6
 		/// <summary>
 		///   Initializes a new instance of the ConflictingCommandException class.
 		/// </summary>
@@ -40,5 +41,6 @@ namespace NEventStore.Domain.Persistence
 		protected ConflictingCommandException(SerializationInfo info, StreamingContext context)
 			: base(info, context)
 		{}
+#endif
 	}
 }
