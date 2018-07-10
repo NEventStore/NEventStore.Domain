@@ -1,9 +1,10 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
+    <TargetFrameworks>netstandard2.0;net45</TargetFrameworks>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <RootNamespace>NEventStore.Domain</RootNamespace>
+    <AssemblyName>NEventStore.Domain</AssemblyName>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -11,20 +12,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Persistence\EventStore\ExceptionMessages.Designer.cs" />
-    <Compile Remove="Persistence\EventStore\ExceptionMessages1.Designer.cs" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <EmbeddedResource Remove="Persistence\EventStore\ExceptionMessages.resx" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\..\dependencies\NEventStore\src\NEventStore\NEventStore.Core.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Update="Persistence\EventStore\Resources\Core\ExceptionMessages.Designer.cs">
+    <Compile Update="Persistence\EventStore\ExceptionMessages.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
       <DependentUpon>ExceptionMessages.resx</DependentUpon>
@@ -32,7 +24,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Update="Persistence\EventStore\Resources\Core\ExceptionMessages.resx">
+    <EmbeddedResource Update="Persistence\EventStore\ExceptionMessages.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>ExceptionMessages.Designer.cs</LastGenOutput>
       <CustomToolNamespace>NEventStore.Domain.Persistence.EventStore</CustomToolNamespace>
