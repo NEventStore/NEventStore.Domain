@@ -13,6 +13,8 @@ Build Status
 
 Branches:
 
+- master [![Build status](https://ci.appveyor.com/api/projects/status/fx08cfosfajnq6np/branch/master?svg=true)](https://ci.appveyor.com/project/AGiorgetti/neventstore-domain/branch/master)
+- develop [![Build status](https://ci.appveyor.com/api/projects/status/fx08cfosfajnq6np/branch/develop?svg=true)](https://ci.appveyor.com/project/AGiorgetti/neventstore-domain/branch/develop)
 - feature/dotnetcore [![Build status](https://ci.appveyor.com/api/projects/status/fx08cfosfajnq6np/branch/feature/dotnetcore?svg=true)](https://ci.appveyor.com/project/AGiorgetti/neventstore-domain/branch/feature/dotnetcore)
 
 Information
