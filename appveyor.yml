@@ -41,5 +41,11 @@ build:
   verbosity: minimal
 after_build:
 - cmd: dotnet pack ./src/NEventStore.Domain/NEventStore.Domain.Core.csproj -c %CONFIGURATION% --no-build -o artifacts /p:PackageVersion=%GitVersion_NuGetVersion%
+test:
+  assemblies:
+    except:
+    - NEventStore.Persistence.AcceptanceTests.dll
+    - NEventStore.dll
+    - NEventStore.Domain.dll
 artifacts:
 - path: '**\artifacts\**\*.*'
