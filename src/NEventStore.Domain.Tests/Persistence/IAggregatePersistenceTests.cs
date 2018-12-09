@@ -6,9 +6,21 @@
     using NEventStore.Domain.Persistence.EventStore;
     using NEventStore.Persistence.AcceptanceTests;
     using NEventStore.Persistence.AcceptanceTests.BDD;
+    using FluentAssertions;
+#if MSTEST
+    using Microsoft.VisualStudio.TestTools.UnitTesting;
+#endif
+#if NUNIT
+    using NUnit.Framework;
+#endif
+#if XUNIT
     using Xunit;
     using Xunit.Should;
-    
+#endif
+
+#if MSTEST
+    [TestClass]
+#endif
     public abstract class using_a_configured_repository : SpecificationBase
     {
         protected IRepository _repository;
@@ -48,25 +60,25 @@
         [Fact]
         public void should_be_returned_when_loaded_by_id()
         {
-            _repository.GetById<TestAggregate>(_id).ShouldNotBeNull();
+            _repository.GetById<TestAggregate>(_id).Should().NotBeNull();
         }
 
         [Fact]
         public void version_should_be_one()
         {
-            _repository.GetById<TestAggregate>(_id).Version.ShouldBe(1);
+            _repository.GetById<TestAggregate>(_id).Version.Should().Be(1);
         }
 
         [Fact]
         public void id_should_be_set()
         {
-            _repository.GetById<TestAggregate>(_id).Id.ShouldBe(_id);
+            _repository.GetById<TestAggregate>(_id).Id.Should().Be(_id);
         }
 
         [Fact]
         public void should_have_name_set()
         {
-            _repository.GetById<TestAggregate>(_id).Name.ShouldBe(_testAggregate.Name);
+            _repository.GetById<TestAggregate>(_id).Name.Should().Be(_testAggregate.Name);
         }
     }
 
@@ -93,13 +105,13 @@
         [Fact]
         public void should_have_updated_name()
         {
-            _repository.GetById<TestAggregate>(_id).Name.ShouldBe(NewName);
+            _repository.GetById<TestAggregate>(_id).Name.Should().Be(NewName);
         }
 
         [Fact]
         public void should_have_updated_version()
         {
-            _repository.GetById<TestAggregate>(_id).Version.ShouldBe(2);
+            _repository.GetById<TestAggregate>(_id).Version.Should().Be(2);
         }
     }
 
@@ -128,7 +140,7 @@
         [Fact]
         public void should_be_able_to_load_initial_version()
         {
-            _repository.GetById<TestAggregate>(_id, 1).Name.ShouldBe(VersionOneName);
+            _repository.GetById<TestAggregate>(_id, 1).Name.Should().Be(VersionOneName);
         }
     }
 
@@ -156,7 +168,7 @@
         [Fact]
         public void should_be_returned_when_loaded_by_id()
         {
-            _repository.GetById<TestAggregate>(_bucket, _id).Name.ShouldBe(_testAggregate.Name);
+            _repository.GetById<TestAggregate>(_bucket, _id).Name.Should().Be(_testAggregate.Name);
         }
     }
 
@@ -194,18 +206,18 @@
         public void the_second_commit_was_silently_discarded_and_not_written_to_database()
         {
             var aggregate = _repository.GetById<TestAggregate>(_id);
-            aggregate.Name.ShouldBe("Test");
-            aggregate.Version.ShouldBe(1);
+            aggregate.Name.Should().Be("Test");
+            aggregate.Version.Should().Be(1);
         }
 
         [Fact]
         public void the_aggregate_still_has_pending_changes()
         {
             var uncommittedEvents = ((IAggregate)_testAggregate).GetUncommittedEvents();
-            uncommittedEvents.ShouldNotBeEmpty();
+            uncommittedEvents.Should().NotBeEmpty();
             var enumerator = uncommittedEvents.GetEnumerator();
             enumerator.MoveNext();
-            enumerator.Current.ShouldBeInstanceOf<NameChangedEvent>();
+            enumerator.Current.Should().BeOfType<NameChangedEvent>();
         }
     }
 
@@ -242,13 +254,13 @@
         [Fact]
         public void should_not_throw_a_ConflictingCommandException()
         {
-            _thrown.ShouldBeNull();
+            _thrown.Should().BeNull();
         }
 
         [Fact]
         public void should_have_updated_name_if_loaded_by_repository_that_saved_it_last()
         {
-            _repository2.GetById<TestAggregate>(_aggregateId).Name.ShouldBe("one");
+            _repository2.GetById<TestAggregate>(_aggregateId).Name.Should().Be("one");
         }
 
         /// <summary>
@@ -257,7 +269,7 @@
         [Fact]
         public void should_have_original_name_if_loaded_by_repository_that_saved_it_first()
         {
-            _repository1.GetById<TestAggregate>(_aggregateId).Name.ShouldBe("my name is..");
+            _repository1.GetById<TestAggregate>(_aggregateId).Name.Should().Be("my name is..");
         }
     }
 
@@ -298,7 +310,7 @@
         [Fact]
         public void should_throw_a_ConflictingCommandException()
         {
-            _thrown.ShouldBeInstanceOf<ConflictingCommandException>();
+            _thrown.Should().BeOfType<ConflictingCommandException>();
         }
     }
 
@@ -338,7 +350,7 @@
         [Fact]
         public void should_throw_a_ConflictingCommandException()
         {
-            _thrown.ShouldBeInstanceOf<ConflictingCommandException>();
+            _thrown.Should().BeOfType<ConflictingCommandException>();
         }
     }
 
@@ -376,7 +388,7 @@
         [Fact]
         public void should_throw_a_ConflictingCommandException()
         {
-            _thrown.ShouldBeInstanceOf<ConflictingCommandException>();
+            _thrown.Should().BeOfType<ConflictingCommandException>();
         }
     }
 
@@ -414,7 +426,7 @@
         [Fact]
         public void should_have_correct_version()
         {
-            _reloadedAggregate.Version.ShouldBe(2);
+            _reloadedAggregate.Version.Should().Be(2);
         }
     }
 }
