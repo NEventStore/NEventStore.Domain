@@ -40,7 +40,10 @@ build:
   project: src/NEventStore.Domain.Core.2017.sln
   verbosity: minimal
 after_build:
-- cmd: dotnet pack ./src/NEventStore.Domain/NEventStore.Domain.Core.csproj -c %CONFIGURATION% --no-build -o artifacts /p:PackageVersion=%GitVersion_NuGetVersion%
+- cmd: >-
+    REM dotnet pack ./src/NEventStore.Domain/NEventStore.Domain.Core.csproj -c %CONFIGURATION% --no-build -o artifacts /p:PackageVersion=%GitVersion_NuGetVersion%
+
+    nuget pack ./src/.nuget/NEventStore.Domain.nuspec -properties "version=%GitVersion_NuGetVersion%;configuration=%CONFIGURATION%" -OutputDirectory artifacts
 test:
   assemblies:
     except:
