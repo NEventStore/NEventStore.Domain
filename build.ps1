@@ -1,5 +1,6 @@
 $configurationdefault = "Release"
 $artifacts = "../../artifacts"
+$nugetartifacts = "artifacts"
 
 $configuration = Read-Host 'Configuration to build [default: Release] ?'
 if ($configuration -eq '') {
@@ -10,14 +11,19 @@ $runtests = Read-Host 'Run Tests (y / n) [default:n] ?'
 # Consider using NuGet to download the package (GitVersion.CommandLine)
 choco install gitversion.portable --pre --y
 choco upgrade gitversion.portable --pre --y
+choco install nuget.commandline
+choco upgrade nuget.commandline
 
 # Display minimal restore information
 dotnet restore ./src/NEventStore.Domain.Core.2017.sln --verbosity m
 
-# GitVersion 
+# GitVersion (for the main module)
 $str = gitversion /updateAssemblyInfo | out-string
 $json = convertFrom-json $str
 $nugetversion = $json.NuGetVersion
+
+# Now we need to patch the submodules
+gitversion ".\dependencies\NEventStore" /updateAssemblyInfo
 
 # Build
 Write-Host "Building: "$nugetversion" "$configuration
@@ -32,4 +38,12 @@ if ($runtests -eq "y") {
 
 # NuGet packages
 Write-Host "NuGet Packages creation"
-dotnet pack ./src/NEventStore.Domain/NEventStore.Domain.Core.csproj -c $configuration --no-build -o $artifacts /p:PackageVersion=$nugetversion
+# not working well, without a nuspec file ProjectReferences get the wrong version number
+#dotnet pack ./src/NEventStore.Domain/NEventStore.Domain.Core.csproj -c $configuration --no-build -o $artifacts -p:PackageVersion=$nugetversion
+
+# not working well, with a reference to a nuspec file, it seems i'm not able to pass in the $configuration to retrieve the correct files
+#Write-Host "dotnet pack ./src/NEventStore.Domain/NEventStore.Domain.Core.csproj --no-build -c $configuration -o $artifacts -p:NuspecProperties=""pippo=$configuration;version=$nugetversion"""
+#dotnet pack ./src/NEventStore.Domain/NEventStore.Domain.Core.csproj --no-build -c $configuration -o $artifacts -p:NuspecFile="" -p:NuspecProperties="pippo=$configuration;version=$nugetversion"
+
+Write-Host nuget pack ./src/NEventStore.Domain/NEventStore.Domain.Core.csproj -properties "version=$nugetversion;configuration=$configuration"
+nuget pack ./src/.nuget/NEventStore.Domain.nuspec -properties "version=$nugetversion;configuration=$configuration" -OutputDirectory $nugetartifacts
