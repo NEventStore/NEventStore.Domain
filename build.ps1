@@ -18,12 +18,14 @@ choco upgrade nuget.commandline
 dotnet restore ./src/NEventStore.Domain.Core.2017.sln --verbosity m
 
 # GitVersion (for the main module)
+Write-Host "Running GitVersion for the Project"
 $str = gitversion /updateAssemblyInfo | out-string
 $json = convertFrom-json $str
 $nugetversion = $json.NuGetVersion
 
-# Now we need to patch the submodules
-gitversion ".\dependencies\NEventStore" /updateAssemblyInfo
+# Now we need to patch the AssemblyInfo for submodules
+Write-Host "Running GitVersion for the Dependencies"
+gitversion ".\dependencies\NEventStore" /updateAssemblyInfo | Out-Null
 
 # Build
 Write-Host "Building: "$nugetversion" "$configuration
@@ -45,5 +47,5 @@ Write-Host "NuGet Packages creation"
 #Write-Host "dotnet pack ./src/NEventStore.Domain/NEventStore.Domain.Core.csproj --no-build -c $configuration -o $artifacts -p:NuspecProperties=""pippo=$configuration;version=$nugetversion"""
 #dotnet pack ./src/NEventStore.Domain/NEventStore.Domain.Core.csproj --no-build -c $configuration -o $artifacts -p:NuspecFile="" -p:NuspecProperties="pippo=$configuration;version=$nugetversion"
 
-Write-Host nuget pack ./src/NEventStore.Domain/NEventStore.Domain.Core.csproj -properties "version=$nugetversion;configuration=$configuration"
+#Write-Host nuget pack ./src/NEventStore.Domain/NEventStore.Domain.Core.csproj -properties "version=$nugetversion;configuration=$configuration"
 nuget pack ./src/.nuget/NEventStore.Domain.nuspec -properties "version=$nugetversion;configuration=$configuration" -OutputDirectory $nugetartifacts

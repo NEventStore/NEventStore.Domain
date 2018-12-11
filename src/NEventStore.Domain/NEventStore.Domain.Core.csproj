@@ -7,6 +7,17 @@
     <AssemblyName>NEventStore.Domain</AssemblyName>
   </PropertyGroup>
 
+  <PropertyGroup>
+    <PackageId>NEventStore.Domain</PackageId>
+    <Title>NEventStore Domain</Title>
+    <Authors>NEventStore Dev Team</Authors>
+    <PackageProjectUrl>http://neventstore.org</PackageProjectUrl>
+    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+    <Description>A recipe for implementing event sourced domain objects with NEventStore.</Description>
+    <PackageTags>events, event sourcing, cqrs, storage, persistence, database</PackageTags>
+    <PackageReleaseNotes></PackageReleaseNotes>
+  </PropertyGroup>
+
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <DefineConstants>TRACE;DEBUG</DefineConstants>
   </PropertyGroup>
