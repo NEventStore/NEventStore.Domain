@@ -15,7 +15,6 @@ Branches:
 
 - master [![Build status](https://ci.appveyor.com/api/projects/status/fx08cfosfajnq6np/branch/master?svg=true)](https://ci.appveyor.com/project/AGiorgetti/neventstore-domain/branch/master)
 - develop [![Build status](https://ci.appveyor.com/api/projects/status/fx08cfosfajnq6np/branch/develop?svg=true)](https://ci.appveyor.com/project/AGiorgetti/neventstore-domain/branch/develop)
-- feature/dotnetcore [![Build status](https://ci.appveyor.com/api/projects/status/fx08cfosfajnq6np/branch/feature/dotnetcore?svg=true)](https://ci.appveyor.com/project/AGiorgetti/neventstore-domain/branch/feature/dotnetcore)
 
 Information
 ===
@@ -42,24 +41,10 @@ git clone https://github.com/NEventStore/NEventStore.Domain.git
 git submodule update
 ```
 
-- execute 'RestorePackages.bat' to restore the NuGet packages for the main project and any submodule
+To build the project locally on a Windows Machine:
 
-```
-RestorePackages.bat
-```
-
-To build the project locally use the following scripts:
-
-"RestorePackages.bat": let NuGet download all the packages it needs, you need to do this at least once to download all the tools needed to compile the library outside Visual Studio.
-
-"Build.RunTask.bat TaskName": executes the specified Task, available tasks are:
-
-- Clean - clean up the output and publish folders
-- UpdateVersion - update the assembly version info files 
-- Compile - compiles the solution
-- Test - executes unit tests
-- Build - executes Clean, UpdateVersion, Compile and Test 
-- Package - executes Build and publishes the artifacts
+- Install [Chocolatey](https://chocolatey.org/).
+- Open a Powershell console in Administrative mode and run the build script `build.ps1` in the root of the repository.
 
 ## How to contribute
 
