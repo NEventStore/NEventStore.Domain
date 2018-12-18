@@ -2,9 +2,21 @@
 {
     using System;
     using NEventStore.Persistence.AcceptanceTests.BDD;
+    using FluentAssertions;
+#if MSTEST
+    using Microsoft.VisualStudio.TestTools.UnitTesting;
+#endif
+#if NUNIT
+    using NUnit.Framework;
+#endif
+#if XUNIT
     using Xunit;
     using Xunit.Should;
+#endif
 
+#if MSTEST
+    [TestClass]
+#endif
     public class when_an_aggregate_is_created : SpecificationBase
     {
         private Guid _aggregateId;
@@ -19,27 +31,27 @@
         [Fact]
         public void should_have_raised_creation_event()
         {
-            _testAggregate.HasRaisedEvent<TestAggregateCreatedEvent>().ShouldBe(true);
+            _testAggregate.HasRaisedEvent<TestAggregateCreatedEvent>().Should().BeTrue();
         }
 
         [Fact]
         public void creation_event_should_carry_the_correct_data()
         {
             var evt = _testAggregate.LastRaisedEvent<TestAggregateCreatedEvent>();
-            evt.Id.ShouldBe(_aggregateId);
-            evt.Name.ShouldBe("Test");
+            evt.Id.Should().Be(_aggregateId);
+            evt.Name.Should().Be("Test");
         }
 
         [Fact]
         public void should_have_name()
         {
-            _testAggregate.Name.ShouldBe("Test");
+            _testAggregate.Name.Should().Be("Test");
         }
 
         [Fact]
         public void aggregate_version_should_be_one()
         {
-            _testAggregate.Version.ShouldBe(1);
+            _testAggregate.Version.Should().Be(1);
         }
     }
 
@@ -62,27 +74,27 @@
         [Fact]
         public void should_have_raised_an_update_event()
         {
-            _testAggregate.HasRaisedEvent<NameChangedEvent>().ShouldBe(true);
+            _testAggregate.HasRaisedEvent<NameChangedEvent>().Should().BeTrue();
         }
 
         [Fact]
         public void creation_event_should_carry_the_correct_data()
         {
             var evt = _testAggregate.LastRaisedEvent<NameChangedEvent>();
-            evt.Id.ShouldBe(_aggregateId);
-            evt.Name.ShouldBe("UpdatedTest");
+            evt.Id.Should().Be(_aggregateId);
+            evt.Name.Should().Be("UpdatedTest");
         }
 
         [Fact]
         public void name_change_should_be_applied()
         {
-            _testAggregate.Name.ShouldBe("UpdatedTest");
+            _testAggregate.Name.Should().Be("UpdatedTest");
         }
 
         [Fact]
         public void applying_events_automatically_increments_version()
         {
-            _testAggregate.Version.ShouldBe(2);
+            _testAggregate.Version.Should().Be(2);
         }
     }
 }

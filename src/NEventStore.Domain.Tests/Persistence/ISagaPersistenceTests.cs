@@ -4,9 +4,21 @@
     using NEventStore.Domain.Persistence;
     using NEventStore.Domain.Persistence.EventStore;
     using NEventStore.Persistence.AcceptanceTests.BDD;
+    using FluentAssertions;
+#if MSTEST
+    using Microsoft.VisualStudio.TestTools.UnitTesting;
+#endif
+#if NUNIT
+    using NUnit.Framework;
+#endif
+#if XUNIT
     using Xunit;
     using Xunit.Should;
+#endif
 
+#if MSTEST
+    [TestClass]
+#endif
     public class using_a_sagaeventstorerepository : SpecificationBase
 	{
 		protected ISagaRepository _repository;
@@ -41,7 +53,7 @@
 		[Fact]
 		public void should_be_returned_when_loaded_by_id()
 		{
-			_repository.GetById<TestSaga>(_id).Id.ShouldBe(_testSaga.Id);
+			_repository.GetById<TestSaga>(_id).Id.Should().Be(_testSaga.Id);
 		}
 	}
 }

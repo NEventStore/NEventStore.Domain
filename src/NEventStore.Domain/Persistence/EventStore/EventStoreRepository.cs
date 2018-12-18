@@ -81,7 +81,9 @@ namespace NEventStore.Domain.Persistence.EventStore
 				catch (DuplicateCommitException)
 				{
 					stream.ClearChanges();
-					return;
+                    // Issue: #4 and test: when_an_aggregate_is_persisted_using_the_same_commitId_twice
+                    // should we rethtow the exception here? or provide a feedback whether the save was successful ?
+                    return;
 				}
 				catch (ConcurrencyException e)
 				{

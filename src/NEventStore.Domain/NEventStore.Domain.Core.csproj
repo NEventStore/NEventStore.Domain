@@ -1,0 +1,45 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>netstandard2.0;net45</TargetFrameworks>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <RootNamespace>NEventStore.Domain</RootNamespace>
+    <AssemblyName>NEventStore.Domain</AssemblyName>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <PackageId>NEventStore.Domain</PackageId>
+    <Title>NEventStore Domain</Title>
+    <Authors>NEventStore Dev Team</Authors>
+    <PackageProjectUrl>http://neventstore.org</PackageProjectUrl>
+    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+    <Description>A recipe for implementing event sourced domain objects with NEventStore.</Description>
+    <PackageTags>events, event sourcing, cqrs, storage, persistence, database</PackageTags>
+    <PackageReleaseNotes></PackageReleaseNotes>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DefineConstants>TRACE;DEBUG</DefineConstants>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\dependencies\NEventStore\src\NEventStore\NEventStore.Core.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Persistence\EventStore\ExceptionMessages.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>ExceptionMessages.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="Persistence\EventStore\ExceptionMessages.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>ExceptionMessages.Designer.cs</LastGenOutput>
+      <CustomToolNamespace>NEventStore.Domain.Persistence.EventStore</CustomToolNamespace>
+    </EmbeddedResource>
+  </ItemGroup>
+
+</Project>

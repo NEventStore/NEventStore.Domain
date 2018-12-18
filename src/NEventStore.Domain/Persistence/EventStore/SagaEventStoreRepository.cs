@@ -1,15 +1,15 @@
 namespace NEventStore.Domain.Persistence.EventStore
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using NEventStore.Persistence;
+	using System;
+	using System.Collections.Generic;
+	using System.Linq;
+	using NEventStore.Persistence;
 
-    public class SagaEventStoreRepository : ISagaRepository, IDisposable
+	public class SagaEventStoreRepository : ISagaRepository, IDisposable
 	{
 		private const string SagaTypeHeader = "SagaType";
 
-		private const string UndispatchedMessageHeader = "UndispatchedMessage.";
+		private string UndispatchedMessageHeader = "UndispatchedMessage.";
 
 		private readonly IStoreEvents _eventStore;
 
@@ -21,6 +21,20 @@ namespace NEventStore.Domain.Persistence.EventStore
 		{
 			_eventStore = eventStore;
 			_factory = factory;
+		}
+
+		/// <summary>
+		/// Creates and instance of the Saga Repository
+		/// </summary>
+		/// <param name="eventStore"></param>
+		/// <param name="factory"></param>
+		/// <param name="undispatchedMessageHeader">allows the user to specify the prefix used to store the undispatched commands inside the Commit.Headers dictionary.
+		/// It is useful for all those databases that do not allow to have . (dot) in property names (like MongoDB, if we chose to not serialize the Headers dictionary as
+		/// ArrayOfArrays).</param>
+		public SagaEventStoreRepository(IStoreEvents eventStore, IConstructSagas factory, string undispatchedMessageHeader)
+			: this(eventStore, factory)
+		{
+			UndispatchedMessageHeader = undispatchedMessageHeader;
 		}
 
 		public void Dispose()
@@ -103,7 +117,7 @@ namespace NEventStore.Domain.Persistence.EventStore
 			return saga;
 		}
 
-		private static Dictionary<string, object> PrepareHeaders(
+		private Dictionary<string, object> PrepareHeaders(
 			ISaga saga, Action<IDictionary<string, object>> updateHeaders)
 		{
 			var headers = new Dictionary<string, object>();

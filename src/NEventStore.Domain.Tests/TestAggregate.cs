@@ -35,7 +35,28 @@
 		{
 			this.Name = @event.Name;
 		}
-	}
+
+        protected override IMemento GetSnapshot()
+        {
+            return new TestAggregateMemento(Name, Id, Version);
+        }
+
+        private class TestAggregateMemento : IMemento
+        {
+            public TestAggregateMemento(string name, Guid id, Int32 version)
+            {
+                Name = name;
+                Id = id;
+                Version = version;
+            }
+
+            public Guid Id { get; set; }
+
+            public String Name { get; set; }
+
+            public int Version { get; set; }
+        }
+    }
 
 	public interface IDomainEvent
 	{
