@@ -21,10 +21,10 @@
 	-->
     <dependencies>
       <group targetFramework=".NETFramework4.5">
-        <dependency id="NEventStore" version="(5.99.99,7.0.0)" exclude="Build,Analyzers"/>
+        <dependency id="NEventStore" version="[6.0.0,7.0.0)" exclude="Build,Analyzers"/>
       </group>
       <group targetFramework=".NETStandard2.0">
-        <dependency id="NEventStore" version="(5.99.99,7.0.0)" exclude="Build,Analyzers"/>
+        <dependency id="NEventStore" version="[6.0.0,7.0.0)" exclude="Build,Analyzers"/>
       </group>
     </dependencies>
   </metadata>  
