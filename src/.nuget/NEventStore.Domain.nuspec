@@ -14,17 +14,17 @@
     <tags>events, event sourcing, cqrs, storage, persistence, database, ddd, domain</tags>
     <!-- 
     Until this is on develop branch, this version should be the previous version, so it made it compatible
-	with pre-release of the actual version. Ex, if we are on 6.0.0 unstable, dependency from NEventStore should
-	be latest stable version so it can take prerelease of 6.0.0 version.
-	With (5.4 we are telling NuGet that we need a version greater than 5.4 so we are allowing all the prerelease
-	6.x.x versions
-	-->
+	  with pre-release of the actual version. Ex, if we are on 6.0.0 unstable, dependency from NEventStore should
+	  be latest stable version so it can take prerelease of 6.0.0 version.
+	  With (5.4 we are telling NuGet that we need a version greater than 5.4 so we are allowing all the prerelease
+	  6.x.x versions
+	  -->
     <dependencies>
       <group targetFramework=".NETFramework4.5">
-        <dependency id="NEventStore" version="[6.0.0,7.0.0)" exclude="Build,Analyzers"/>
+        <dependency id="NEventStore" version="[7.0.0,8.0.0)" exclude="Build,Analyzers"/>
       </group>
       <group targetFramework=".NETStandard2.0">
-        <dependency id="NEventStore" version="[6.0.0,7.0.0)" exclude="Build,Analyzers"/>
+        <dependency id="NEventStore" version="[7.0.0,8.0.0)" exclude="Build,Analyzers"/>
       </group>
     </dependencies>
   </metadata>  
