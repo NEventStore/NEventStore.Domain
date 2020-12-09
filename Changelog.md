@@ -1,5 +1,9 @@
 # NEventStore Versions
 
+## 8.0.0
+
+Updated NEventStore reference to version 8.0.0
+
 ## 7.0.0
 
 Updated NEventStore reference to version 7.0.0
