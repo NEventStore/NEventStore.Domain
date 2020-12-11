@@ -5,8 +5,9 @@ NEventStore.Domain is a recipe for implementing event sourced domain objects wit
 
 NEventStore.Domain currently supports:
 
-- dotnet framework 4.5
-- dotnet standard 2.0, dotnet core 2.0 
+- .net framework 4.6.1
+- .net standard 2.0
+- .net 5.0
 
 Build Status
 ===
@@ -96,4 +97,3 @@ This means, that we need a NEventStore greater than the latest published, but le
 5.4.1
 6.0.0-unstable00001
 6.0.0
-
