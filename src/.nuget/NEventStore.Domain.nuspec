@@ -21,13 +21,13 @@
 	  -->
     <dependencies>
       <group targetFramework=".NETFramework4.6.1">
-        <dependency id="NEventStore" version="[8.0.0,9.0.0)" exclude="Build,Analyzers"/>
+        <dependency id="NEventStore" version="[8.0.0, 9.0.0)" exclude="Build,Analyzers" />
+      </group>
+      <group targetFramework="net5.0">
+        <dependency id="NEventStore" version="[8.0.0, 9.0.0)" exclude="Build,Analyzers" />
       </group>
       <group targetFramework=".NETStandard2.0">
-        <dependency id="NEventStore" version="[8.0.0,9.0.0)" exclude="Build,Analyzers"/>
-      </group>
-      <group targetFramework=".NET5.0">
-        <dependency id="NEventStore" version="[8.0.0,9.0.0)" exclude="Build,Analyzers"/>
+        <dependency id="NEventStore" version="[8.0.0, 9.0.0)" exclude="Build,Analyzers" />
       </group>
     </dependencies>
   </metadata>  

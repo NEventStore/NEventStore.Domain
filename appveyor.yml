@@ -37,7 +37,7 @@ build:
   verbosity: minimal
 after_build:
 - cmd: >-
-    REM dotnet pack ./src/NEventStore.Domain/NEventStore.Domain.Core.csproj -c %CONFIGURATION% --no-build -o artifacts /p:PackageVersion=%GitVersion_NuGetVersion%
+    REM dotnet pack ./src/NEventStore.Domain/NEventStore.Domain.Core.csproj -c %CONFIGURATION% --no-build -o artifacts -p:PackageVersion=%GitVersion_NuGetVersion%
 
     nuget pack ./src/.nuget/NEventStore.Domain.nuspec -properties "version=%GitVersion_NuGetVersion%;configuration=%CONFIGURATION%" -OutputDirectory artifacts
 test:
