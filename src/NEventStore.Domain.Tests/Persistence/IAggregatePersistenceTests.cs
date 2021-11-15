@@ -214,7 +214,7 @@
         public void the_aggregate_still_has_pending_changes()
         {
             var uncommittedEvents = ((IAggregate)_testAggregate).GetUncommittedEvents();
-            uncommittedEvents.Should().NotBeEmpty();
+            uncommittedEvents.Count.Should().BeGreaterThan(0);
             var enumerator = uncommittedEvents.GetEnumerator();
             enumerator.MoveNext();
             enumerator.Current.Should().BeOfType<NameChangedEvent>();
