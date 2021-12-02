@@ -1,5 +1,10 @@
 # NEventStore Versions
 
+## 9.0.0
+
+- Updated NEventStore reference to version 9.0.0
+- net6.0 supported.
+
 ## 8.0.0
 
 - Updated NEventStore reference to version 8.0.0
