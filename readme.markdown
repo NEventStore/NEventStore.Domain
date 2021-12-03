@@ -46,6 +46,7 @@ git submodule update
 To build the project locally on a Windows Machine:
 
 - Install [Chocolatey](https://chocolatey.org/).
+- Optional: update `.\src\.nuget\NEventStore.Domain.nuspec` file if needed (before creating relase packages).
 - Open a Powershell console in Administrative mode and run the build script `build.ps1` in the root of the repository.
 
 ## How to contribute
@@ -87,6 +88,10 @@ git flow init
 You can leave all values as default. Now your repository is GitFlow enabled.
 
 ### Note on Nuget version on Nuspec
+
+Remember to update `.\src\.nuget\NEventStore.Domain.nuspec` file if needed (before creating relase packages).
+
+The .nuspec file is needed because the new `dotnet pack` command has problems dealing with ProjectReferences, submodules get the wrong version number.
 
 While we are on develop branch, (suppose we just bumped major number so the driver version number is 6.0.0-unstablexxxx), we need to declare that this persistence driver depends from a version greater than the latest published. If the latest version of NEventStore 5.x.x wave iw 5.4.0 we need to declare this package dependency as
 
