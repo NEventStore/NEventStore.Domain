@@ -37,5 +37,6 @@
   <files>
     <!--<file src="bin\$configuration$\**" target="lib"/>-->
     <file src="..\NEventStore.Domain\bin\$configuration$\**\NEventStore.Domain.dll" target="lib"/>
+	<file src="..\NEventStore.Domain\bin\$configuration$\**\NEventStore.Domain.xml" target="lib"/>
   </files>  
 </package>
