@@ -1,5 +1,10 @@
 # NEventStore Versions
 
+## 9.0.1
+
+- Updated NEventStore reference to version 9.0.1
+- Added documentation files to NuGet packages (improved intellisense support) [#15](https://github.com/NEventStore/NEventStore.Domain/issues/15)
+
 ## 9.0.0
 
 - Updated NEventStore reference to version 9.0.0
