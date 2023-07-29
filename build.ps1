@@ -7,33 +7,30 @@ if ($configuration -eq '') {
 }
 $runtests = Read-Host 'Run Tests (y / n) [default:n] ?'
 
-# Consider using NuGet to download the package (GitVersion.CommandLine)
-choco install gitversion.portable --pre --y
-choco upgrade gitversion.portable --pre --y
-choco install nuget.commandline
-choco upgrade nuget.commandline
+# Install gitversion tool
+dotnet tool restore
 
 # Display minimal restore information
-dotnet restore ./src/NEventStore.Domain.Core.2017.sln --verbosity m
+dotnet restore ./src/NEventStore.Domain.Core.sln --verbosity m
 
 # GitVersion (for the main module)
 Write-Host "Running GitVersion for the Project"
-$str = gitversion /updateAssemblyInfo | out-string
+$str = dotnet tool run dotnet-gitversion /updateAssemblyInfo | out-string
 $json = convertFrom-json $str
 $nugetversion = $json.NuGetVersion
 
 # Now we need to patch the AssemblyInfo for submodules
 Write-Host "Running GitVersion for the Dependencies"
-gitversion ".\dependencies\NEventStore" /updateAssemblyInfo | Out-Null
+dotnet tool run dotnet-gitversion ".\dependencies\NEventStore" /updateAssemblyInfo | Out-Null
 
 # Build
 Write-Host "Building: "$nugetversion" "$configuration
-dotnet build ./src/NEventStore.Domain.Core.2017.sln -c $configuration --no-restore
+dotnet build ./src/NEventStore.Domain.Core.sln -c $configuration --no-restore
 
 # Testing
 if ($runtests -eq "y") {
     Write-Host "Executing Tests"
-    dotnet test ./src/NEventStore.Domain.Core.2017.sln -c $configuration --no-build
+    dotnet test ./src/NEventStore.Domain.Core.sln -c $configuration --no-build
     Write-Host "Tests Execution Complated"
 }
 
