@@ -5,10 +5,8 @@ NEventStore.Domain is a recipe for implementing event sourced domain objects wit
 
 NEventStore.Domain currently supports:
 
-- .net framework 4.6.1
+- .net framework 4.6.2
 - .net standard 2.0
-- .net 5.0
-- .net 6.0
 
 Build Status
 ===
@@ -45,7 +43,6 @@ git submodule update
 
 To build the project locally on a Windows Machine:
 
-- Install [Chocolatey](https://chocolatey.org/).
 - Optional: update `.\src\.nuget\NEventStore.Domain.nuspec` file if needed (before creating relase packages).
 - Open a Powershell console in Administrative mode and run the build script `build.ps1` in the root of the repository.
 
