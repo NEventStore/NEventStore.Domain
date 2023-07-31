@@ -18,7 +18,7 @@ dotnet_csproj:
   informational_version: '{version}'
 install:
 - cmd: >-
-    choco install gitversion.portable -pre -y
+    choco install gitversion.portable -y
 
     git submodule update --init --recursive
 before_build:
@@ -29,11 +29,14 @@ before_build:
 
     # Display minimal restore text
 
-    dotnet restore ./src/NEventStore.Domain.Core.2017.sln --verbosity m
+    dotnet restore ./src/NEventStore.Domain.Core.sln --verbosity m
 
     gitversion /l console /output buildserver /updateAssemblyInfo
+
+    # Now we need to patch the AssemblyInfo for submodules
+    gitversion .\dependencies\NEventStore /l console /updateAssemblyInfo
 build:
-  project: src/NEventStore.Domain.Core.2017.sln
+  project: src/NEventStore.Domain.Core.sln
   verbosity: minimal
 after_build:
 - cmd: >-

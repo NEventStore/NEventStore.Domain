@@ -1,4 +1,9 @@
-# NEventStore Versions
+# NEventStore.Domain Versions
+
+## 9.1.1
+
+- Updated NEventStore reference to version 9.1.0
+- Target Frameworks: netstandard2.0, net462.
 
 ## 9.0.1
 
