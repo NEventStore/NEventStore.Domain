@@ -17,7 +17,7 @@ dotnet restore ./src/NEventStore.Domain.Core.sln --verbosity m
 Write-Host "Running GitVersion for the Project"
 $str = dotnet tool run dotnet-gitversion /updateAssemblyInfo | out-string
 $json = convertFrom-json $str
-$nugetversion = $json.NuGetVersion
+$nugetversion = $json.SemVer
 
 # Now we need to patch the AssemblyInfo for submodules
 Write-Host "Running GitVersion for the Dependencies"
@@ -44,4 +44,4 @@ Write-Host "NuGet Packages creation"
 #dotnet pack ./src/NEventStore.Domain/NEventStore.Domain.Core.csproj --no-build -c $configuration -o $artifacts -p:NuspecFile="" -p:NuspecProperties="pippo=$configuration;version=$nugetversion"
 
 #Write-Host nuget pack ./src/NEventStore.Domain/NEventStore.Domain.Core.csproj -properties "version=$nugetversion;configuration=$configuration"
-nuget pack ./src/.nuget/NEventStore.Domain.nuspec -properties "version=$nugetversion;configuration=$configuration" -OutputDirectory $artifacts
+nuget pack ./src/.nuget/NEventStore.Domain.nuspec -properties "version=$nugetversion;configuration=$configuration" -OutputDirectory $artifacts -Symbols -SymbolPackageFormat snupkg
