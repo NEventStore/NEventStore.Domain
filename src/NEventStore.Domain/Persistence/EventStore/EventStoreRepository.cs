@@ -2,7 +2,7 @@ using NEventStore.Persistence;
 
 namespace NEventStore.Domain.Persistence.EventStore
 {
-    public class EventStoreRepository : IRepository
+    public partial class EventStoreRepository : IRepository
     {
         private const string AggregateTypeHeader = "AggregateType";
 
@@ -40,7 +40,7 @@ namespace NEventStore.Domain.Persistence.EventStore
             return aggregate;
         }
 
-        public void Save(string bucketId, IAggregate aggregate, Guid commitId, Action<IDictionary<string, object>> updateHeaders)
+        public void Save(string bucketId, IAggregate aggregate, Guid commitId, Action<IDictionary<string, object>>? updateHeaders)
         {
             Dictionary<string, object> headers = PrepareHeaders(aggregate, updateHeaders);
             while (true)
@@ -116,9 +116,8 @@ namespace NEventStore.Domain.Persistence.EventStore
 
         private ISnapshot? GetSnapshot(string bucketId, Guid id, int version)
         {
-            ISnapshot? snapshot;
             var snapshotId = bucketId + id;
-            if (!_snapshots.TryGetValue(snapshotId, out snapshot))
+            if (!_snapshots.TryGetValue(snapshotId, out ISnapshot? snapshot))
             {
                 _snapshots[snapshotId] = snapshot = _eventStore.Advanced.GetSnapshot(bucketId, id, version);
             }
@@ -144,9 +143,8 @@ namespace NEventStore.Domain.Persistence.EventStore
 
         private IEventStream PrepareStream(string bucketId, IAggregate aggregate, Dictionary<string, object> headers)
         {
-            IEventStream stream;
             var streamId = bucketId + "+" + aggregate.Id;
-            if (!_streams.TryGetValue(streamId, out stream))
+            if (!_streams.TryGetValue(streamId, out IEventStream stream))
             {
                 _streams[streamId] = stream = _eventStore.CreateStream(bucketId, aggregate.Id);
             }
@@ -166,15 +164,12 @@ namespace NEventStore.Domain.Persistence.EventStore
         }
 
         private static Dictionary<string, object> PrepareHeaders(
-            IAggregate aggregate, Action<IDictionary<string, object>> updateHeaders)
+            IAggregate aggregate, Action<IDictionary<string, object>>? updateHeaders)
         {
             var headers = new Dictionary<string, object>();
 
             headers[AggregateTypeHeader] = aggregate.GetType().FullName;
-            if (updateHeaders != null)
-            {
-                updateHeaders(headers);
-            }
+            updateHeaders?.Invoke(headers);
 
             return headers;
         }
