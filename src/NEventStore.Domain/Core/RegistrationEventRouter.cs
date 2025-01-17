@@ -1,11 +1,11 @@
 namespace NEventStore.Domain.Core
 {
-    using System;
-    using System.Collections.Generic;
+	using System;
+	using System.Collections.Generic;
 
-    public class RegistrationEventRouter : IRouteEvents
+	public class RegistrationEventRouter : IRouteEvents
 	{
-		private readonly IDictionary<Type, Action<object>> handlers = new Dictionary<Type, Action<object>>();
+		private readonly Dictionary<Type, Action<object>> handlers = new Dictionary<Type, Action<object>>();
 
 		private IAggregate regsitered;
 
