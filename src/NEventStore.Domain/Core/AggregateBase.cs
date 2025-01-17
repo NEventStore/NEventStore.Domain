@@ -5,100 +5,104 @@ namespace NEventStore.Domain.Core
     using System.Collections.Generic;
 
     public abstract class AggregateBase : IAggregate, IEquatable<IAggregate>
-	{
-		private readonly ICollection<object> uncommittedEvents = new LinkedList<object>();
+    {
+        private readonly ICollection<object> uncommittedEvents = new LinkedList<object>();
 
-		private IRouteEvents registeredRoutes;
+        private IRouteEvents? registeredRoutes;
 
-		protected AggregateBase()
-			: this(null)
-		{}
+        protected AggregateBase()
+            : this(null)
+        { }
 
-		protected AggregateBase(IRouteEvents handler)
-		{
-			if (handler == null)
-			{
-				return;
-			}
+        protected AggregateBase(IRouteEvents? handler)
+        {
+            if (handler == null)
+            {
+                return;
+            }
 
-			this.RegisteredRoutes = handler;
-			this.RegisteredRoutes.Register(this);
-		}
+            this.RegisteredRoutes = handler;
+            this.RegisteredRoutes.Register(this);
+        }
 
-		protected IRouteEvents RegisteredRoutes
-		{
-			get
-			{
-				return this.registeredRoutes ?? (this.registeredRoutes = new ConventionEventRouter(true, this));
-			}
-			set
-			{
-				if (value == null)
-				{
-					throw new InvalidOperationException("AggregateBase must have an event router to function");
-				}
+        protected IRouteEvents RegisteredRoutes
+        {
+            get
+            {
+                return this.registeredRoutes ?? (this.registeredRoutes = new ConventionEventRouter(true, this));
+            }
+            set
+            {
+                if (value == null)
+                {
+                    throw new InvalidOperationException("AggregateBase must have an event router to function");
+                }
 
-				this.registeredRoutes = value;
-			}
-		}
+                this.registeredRoutes = value;
+            }
+        }
 
-		public Guid Id { get; protected set; }
+        public Guid Id { get; protected set; }
 
-		public int Version { get; protected set; }
+        public int Version { get; protected set; }
 
-		void IAggregate.ApplyEvent(object @event)
-		{
-			this.RegisteredRoutes.Dispatch(@event);
-			this.Version++;
-		}
+        void IAggregate.ApplyEvent(object @event)
+        {
+            this.RegisteredRoutes.Dispatch(@event);
+            this.Version++;
+        }
 
-		ICollection IAggregate.GetUncommittedEvents()
-		{
-			return (ICollection)this.uncommittedEvents;
-		}
+        ICollection IAggregate.GetUncommittedEvents()
+        {
+            return (ICollection)this.uncommittedEvents;
+        }
 
-		void IAggregate.ClearUncommittedEvents()
-		{
-			this.uncommittedEvents.Clear();
-		}
+        void IAggregate.ClearUncommittedEvents()
+        {
+            this.uncommittedEvents.Clear();
+        }
 
-		IMemento IAggregate.GetSnapshot()
-		{
-			IMemento snapshot = this.GetSnapshot();
-			snapshot.Id = this.Id;
-			snapshot.Version = this.Version;
-			return snapshot;
-		}
+        IMemento? IAggregate.GetSnapshot()
+        {
+            var snapshot = this.GetSnapshot();
+            if (snapshot == null)
+            {
+                return null;
+            }
+            snapshot.Id = this.Id;
+            snapshot.Version = this.Version;
+            return snapshot;
+        }
 
-		public virtual bool Equals(IAggregate other)
-		{
-			return null != other && other.Id == this.Id;
-		}
+        public virtual bool Equals(IAggregate other)
+        {
+            return null != other && other.Id == this.Id;
+        }
 
-		protected void Register<T>(Action<T> route)
-		{
-			this.RegisteredRoutes.Register(route);
-		}
+        protected void Register<T>(Action<T> route)
+        {
+            this.RegisteredRoutes.Register(route);
+        }
 
-		protected void RaiseEvent(object @event)
-		{
-			((IAggregate)this).ApplyEvent(@event);
-			this.uncommittedEvents.Add(@event);
-		}
+        protected void RaiseEvent(object @event)
+        {
+            ((IAggregate)this).ApplyEvent(@event);
+            this.uncommittedEvents.Add(@event);
+        }
 
-		protected virtual IMemento GetSnapshot()
-		{
-			return null;
-		}
+        protected virtual IMemento? GetSnapshot()
+        {
+            return null;
+        }
 
-		public override int GetHashCode()
-		{
-			return this.Id.GetHashCode();
-		}
+        public override int GetHashCode()
+        {
+            return this.Id.GetHashCode();
+        }
 
-		public override bool Equals(object obj)
-		{
-			return this.Equals(obj as IAggregate);
-		}
-	}
+        public override bool Equals(object obj)
+        {
+            return this.Equals(obj as IAggregate);
+        }
+    }
 }

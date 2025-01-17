@@ -1,10 +1,7 @@
+using NEventStore.Persistence;
+
 namespace NEventStore.Domain.Persistence.EventStore
 {
-	using System;
-	using System.Collections.Generic;
-	using System.Linq;
-	using NEventStore.Persistence;
-
 	public class SagaEventStoreRepository : ISagaRepository, IDisposable
 	{
 		private const string SagaTypeHeader = "SagaType";
@@ -15,7 +12,7 @@ namespace NEventStore.Domain.Persistence.EventStore
 
 		private readonly IConstructSagas _factory;
 
-		private readonly IDictionary<string, IEventStream> _streams = new Dictionary<string, IEventStream>();
+		private readonly Dictionary<string, IEventStream> _streams = [];
 
 		public SagaEventStoreRepository(IStoreEvents eventStore, IConstructSagas factory)
 		{
@@ -28,7 +25,7 @@ namespace NEventStore.Domain.Persistence.EventStore
 		/// </summary>
 		/// <param name="eventStore"></param>
 		/// <param name="factory"></param>
-		/// <param name="undispatchedMessageHeader">allows the user to specify the prefix used to store the undispatched commands inside the Commit.Headers dictionary.
+		/// <param name="undispatchedMessageHeader">allows the user to specify the prefix used to store the un-dispatched commands inside the Commit.Headers dictionary.
 		/// It is useful for all those databases that do not allow to have . (dot) in property names (like MongoDB, if we chose to not serialize the Headers dictionary as
 		/// ArrayOfArrays).</param>
 		public SagaEventStoreRepository(IStoreEvents eventStore, IConstructSagas factory, string undispatchedMessageHeader)
@@ -52,7 +49,7 @@ namespace NEventStore.Domain.Persistence.EventStore
 		{
 			if (saga == null)
 			{
-				throw new ArgumentNullException("saga", ExceptionMessages.NullArgument);
+				throw new ArgumentNullException(nameof(saga), ExceptionMessages.NullArgument);
 			}
 
 			Dictionary<string, object> headers = PrepareHeaders(saga, updateHeaders);
