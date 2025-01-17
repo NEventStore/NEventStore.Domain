@@ -1,8 +1,5 @@
 namespace NEventStore.Domain.Persistence
 {
-    using System;
-    using System.Collections.Generic;
-
     public static class SagaRepositoryExtensions
     {
         public static TSaga GetById<TSaga>(this ISagaRepository sagaRepository, Guid sagaId)
