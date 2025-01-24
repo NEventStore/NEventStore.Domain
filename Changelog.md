@@ -1,6 +1,6 @@
 # NEventStore.Domain Versions
 
-## vNext
+## 10.0.0
 
 - Async Methods [#17](https://github.com/NEventStore/NEventStore.Domain/issues/17)
 - Updated NEventStore reference to version 10.0.0
