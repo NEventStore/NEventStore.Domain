@@ -15,12 +15,12 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NEventStore.Domain.Core.Tes
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{A4010EA6-0ECC-445C-BECC-02C45F0427B7}"
 	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
 		..\appveyor.yml = ..\appveyor.yml
 		..\build.ps1 = ..\build.ps1
 		..\Changelog.md = ..\Changelog.md
 		..\GitVersion.yml = ..\GitVersion.yml
-		.nuget\NEventStore.Domain.nuspec = .nuget\NEventStore.Domain.nuspec
-		..\readme.markdown = ..\readme.markdown
+		..\Readme.md = ..\Readme.md
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{83B575A7-6DA1-4E0A-8331-B59836F898D7}"

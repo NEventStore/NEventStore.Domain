@@ -14,7 +14,7 @@ using Xunit;
 using Xunit.Should;
 #endif
 
-namespace NEventStore.Domain.Tests.Persistence
+namespace NEventStore.Domain.Tests.Persistence.Async
 {
 #if MSTEST
     [TestClass]
@@ -50,33 +50,37 @@ namespace NEventStore.Domain.Tests.Persistence
             _testAggregate = new TestAggregate(_id, "Test");
         }
 
-        protected override void Because()
+        protected override Task BecauseAsync()
         {
-            _repository!.Save(_testAggregate!, Guid.NewGuid(), null);
+            return _repository!.SaveAsync(_testAggregate!, Guid.NewGuid(), null);
         }
 
         [Fact]
-        public void should_be_returned_when_loaded_by_id()
+        public async Task should_be_returned_when_loaded_by_id()
         {
-            _repository!.GetById<TestAggregate>(_id).Should().NotBeNull();
+            (await _repository!.GetByIdAsync<TestAggregate>(_id).ConfigureAwait(false))
+                .Should().NotBeNull();
         }
 
         [Fact]
-        public void version_should_be_one()
+        public async Task version_should_be_one()
         {
-            _repository!.GetById<TestAggregate>(_id).Version.Should().Be(1);
+            (await _repository!.GetByIdAsync<TestAggregate>(_id).ConfigureAwait(false))
+                .Version.Should().Be(1);
         }
 
         [Fact]
-        public void id_should_be_set()
+        public async Task id_should_be_set()
         {
-            _repository!.GetById<TestAggregate>(_id).Id.Should().Be(_id);
+            (await _repository!.GetByIdAsync<TestAggregate>(_id).ConfigureAwait(false))
+                .Id.Should().Be(_id);
         }
 
         [Fact]
-        public void should_have_name_set()
+        public async Task should_have_name_set()
         {
-            _repository!.GetById<TestAggregate>(_id).Name.Should().Be(_testAggregate!.Name);
+            (await _repository!.GetByIdAsync<TestAggregate>(_id).ConfigureAwait(false))
+                .Name.Should().Be(_testAggregate!.Name);
         }
     }
 
@@ -86,30 +90,32 @@ namespace NEventStore.Domain.Tests.Persistence
 
         private const string NewName = "UpdatedName";
 
-        protected override void Context()
+        protected override Task ContextAsync()
         {
             base.Context();
             _id = Guid.NewGuid();
-            _repository!.Save(new TestAggregate(_id, "Test"), Guid.NewGuid(), null);
+            return _repository!.SaveAsync(new TestAggregate(_id, "Test"), Guid.NewGuid(), null);
         }
 
-        protected override void Because()
+        protected override Task BecauseAsync()
         {
             var aggregate = _repository!.GetById<TestAggregate>(_id);
             aggregate.ChangeName(NewName);
-            _repository!.Save(aggregate, Guid.NewGuid(), null);
+            return _repository!.SaveAsync(aggregate, Guid.NewGuid(), null);
         }
 
         [Fact]
-        public void should_have_updated_name()
+        public async Task should_have_updated_name()
         {
-            _repository!.GetById<TestAggregate>(_id).Name.Should().Be(NewName);
+            (await _repository!.GetByIdAsync<TestAggregate>(_id))
+                .Name.Should().Be(NewName);
         }
 
         [Fact]
-        public void should_have_updated_version()
+        public async Task should_have_updated_version()
         {
-            _repository!.GetById<TestAggregate>(_id).Version.Should().Be(2);
+            (await _repository!.GetByIdAsync<TestAggregate>(_id))
+                .Version.Should().Be(2);
         }
     }
 
@@ -120,25 +126,26 @@ namespace NEventStore.Domain.Tests.Persistence
         private const string VersionOneName = "Test";
         private const string NewName = "UpdatedName";
 
-        protected override void Context()
+        protected override Task ContextAsync()
         {
             base.Context();
             _id = Guid.NewGuid();
-            _repository!.Save(new TestAggregate(_id, VersionOneName), Guid.NewGuid(), null);
+            return _repository!.SaveAsync(new TestAggregate(_id, VersionOneName), Guid.NewGuid(), null);
         }
 
-        protected override void Because()
+        protected override async Task BecauseAsync()
         {
             var aggregate = _repository!.GetById<TestAggregate>(_id);
             aggregate.ChangeName(NewName);
-            _repository!.Save(aggregate, Guid.NewGuid(), null);
+            await _repository!.SaveAsync(aggregate, Guid.NewGuid(), null).ConfigureAwait(false);
             _repository!.Dispose();
         }
 
         [Fact]
-        public void should_be_able_to_load_initial_version()
+        public async Task should_be_able_to_load_initial_version()
         {
-            _repository!.GetById<TestAggregate>(_id, 1).Name.Should().Be(VersionOneName);
+            (await _repository!.GetByIdAsync<TestAggregate>(_id, 1))
+                .Name.Should().Be(VersionOneName);
         }
     }
 
@@ -157,15 +164,16 @@ namespace NEventStore.Domain.Tests.Persistence
             _testAggregate = new TestAggregate(_id, "Test");
         }
 
-        protected override void Because()
+        protected override Task BecauseAsync()
         {
-            _repository!.Save(_bucket, _testAggregate!, Guid.NewGuid(), null);
+            return _repository!.SaveAsync(_bucket, _testAggregate!, Guid.NewGuid(), null);
         }
 
         [Fact]
-        public void should_be_returned_when_loaded_by_id()
+        public async Task should_be_returned_when_loaded_by_id()
         {
-            _repository!.GetById<TestAggregate>(_bucket, _id).Name.Should().Be(_testAggregate!.Name);
+            (await _repository!.GetByIdAsync<TestAggregate>(_bucket, _id).ConfigureAwait(false))
+                .Name.Should().Be(_testAggregate!.Name);
         }
     }
 
@@ -190,20 +198,20 @@ namespace NEventStore.Domain.Tests.Persistence
             _testAggregate = new TestAggregate(_id, "Test");
         }
 
-        protected override void Because()
+        protected override async Task BecauseAsync()
         {
             var commitId = Guid.NewGuid();
-            _repository!.Save(_testAggregate!, commitId, null);
+            await _repository!.SaveAsync(_testAggregate!, commitId, null).ConfigureAwait(false);
 
             _testAggregate!.ChangeName("one");
 
-            _repository!.Save(_testAggregate, commitId);
+            await _repository!.SaveAsync(_testAggregate, commitId).ConfigureAwait(false);
         }
 
         [Fact]
-        public void the_second_commit_was_silently_discarded_and_not_written_to_database()
+        public async Task the_second_commit_was_silently_discarded_and_not_written_to_database()
         {
-            var aggregate = _repository!.GetById<TestAggregate>(_id);
+            var aggregate = (await _repository!.GetByIdAsync<TestAggregate>(_id).ConfigureAwait(false));
             aggregate.Name.Should().Be("Test");
             aggregate.Version.Should().Be(1);
         }
@@ -241,12 +249,12 @@ namespace NEventStore.Domain.Tests.Persistence
             aggregate = new TestAggregate(_aggregateId, "my name is..");
         }
 
-        protected override void Because()
+        protected override async Task BecauseAsync()
         {
-            _repository1!.Save(aggregate!, Guid.NewGuid());
+            await _repository1!.SaveAsync(aggregate!, Guid.NewGuid()).ConfigureAwait(false);
             aggregate!.ChangeName("one");
 
-            _thrown = Catch.Exception(() => _repository2!.Save(aggregate, Guid.NewGuid()));
+            _thrown = await Catch.ExceptionAsync(() => _repository2!.SaveAsync(aggregate, Guid.NewGuid()));
         }
 
         [Fact]
@@ -256,18 +264,20 @@ namespace NEventStore.Domain.Tests.Persistence
         }
 
         [Fact]
-        public void should_have_updated_name_if_loaded_by_repository_that_saved_it_last()
+        public async Task should_have_updated_name_if_loaded_by_repository_that_saved_it_last()
         {
-            _repository2!.GetById<TestAggregate>(_aggregateId).Name.Should().Be("one");
+            (await _repository2!.GetByIdAsync<TestAggregate>(_aggregateId).ConfigureAwait(false))
+                .Name.Should().Be("one");
         }
 
         /// <summary>
         /// current repository implementation act as a session cache!
         /// </summary>
         [Fact]
-        public void should_have_original_name_if_loaded_by_repository_that_saved_it_first()
+        public async Task should_have_original_name_if_loaded_by_repository_that_saved_it_first()
         {
-            _repository1!.GetById<TestAggregate>(_aggregateId).Name.Should().Be("my name is..");
+            (await _repository1!.GetByIdAsync<TestAggregate>(_aggregateId).ConfigureAwait(false))
+                .Name.Should().Be("my name is..");
         }
     }
 
@@ -280,29 +290,27 @@ namespace NEventStore.Domain.Tests.Persistence
         private Guid _aggregateId;
         private Exception? _thrown;
 
-        protected override void Context()
+        protected override Task ContextAsync()
         {
-            base.Context();
-
             _storeEvents = Wireup.Init().UsingInMemoryPersistence().Build();
             _repository1 = new EventStoreRepository(_storeEvents, new AggregateFactory(), new ConflictDetector());
             _repository2 = new EventStoreRepository(_storeEvents, new AggregateFactory(), new ConflictDetector());
 
             _aggregateId = Guid.NewGuid();
             var aggregate = new TestAggregate(_aggregateId, "my name is..");
-            _repository1.Save(aggregate, Guid.NewGuid());
+            return _repository1.SaveAsync(aggregate, Guid.NewGuid());
         }
 
-        protected override void Because()
+        protected override async Task BecauseAsync()
         {
-            var agg1 = _repository1!.GetById<TestAggregate>(_aggregateId);
-            var agg2 = _repository2!.GetById<TestAggregate>(_aggregateId);
+            var agg1 = await _repository1!.GetByIdAsync<TestAggregate>(_aggregateId).ConfigureAwait(false);
+            var agg2 = await _repository2!.GetByIdAsync<TestAggregate>(_aggregateId).ConfigureAwait(false);
             agg1.ChangeName("one");
             agg2.ChangeName("two");
 
-            _repository1!.Save(agg1, Guid.NewGuid());
+            await _repository1!.SaveAsync(agg1, Guid.NewGuid()).ConfigureAwait(false);
 
-            _thrown = Catch.Exception(() => _repository2!.Save(agg2, Guid.NewGuid()));
+            _thrown = await Catch.ExceptionAsync(() => _repository2!.SaveAsync(agg2, Guid.NewGuid())).ConfigureAwait(false);
         }
 
         [Fact]
@@ -321,28 +329,26 @@ namespace NEventStore.Domain.Tests.Persistence
         private Guid _aggregateId;
         private Exception? _thrown;
 
-        protected override void Context()
+        protected override Task ContextAsync()
         {
-            base.Context();
-
             _storeEvents = Wireup.Init().UsingInMemoryPersistence().Build();
             _repository1 = new EventStoreRepository(_storeEvents, new AggregateFactory(), new ConflictDetector());
             _repository2 = new EventStoreRepository(_storeEvents, new AggregateFactory(), new ConflictDetector());
 
             _aggregateId = Guid.NewGuid();
             var aggregate = new TestAggregate(_aggregateId, "my name is..");
-            _repository1.Save(aggregate, Guid.NewGuid());
+            return _repository1.SaveAsync(aggregate, Guid.NewGuid());
         }
 
-        protected override void Because()
+        protected override async Task BecauseAsync()
         {
-            var agg1 = _repository1!.GetById<TestAggregate>(_aggregateId);
+            var agg1 = await _repository1!.GetByIdAsync<TestAggregate>(_aggregateId).ConfigureAwait(false);
             var agg2 = new TestAggregate(_aggregateId, "two");
             agg1.ChangeName("one");
 
-            _repository1!.Save(agg1, Guid.NewGuid());
+            await _repository1!.SaveAsync(agg1, Guid.NewGuid()).ConfigureAwait(false);
 
-            _thrown = Catch.Exception(() => _repository2!.Save(agg2, Guid.NewGuid()));
+            _thrown = await Catch.ExceptionAsync(() => _repository2!.SaveAsync(agg2, Guid.NewGuid())).ConfigureAwait(false);
         }
 
         [Fact]
@@ -363,8 +369,6 @@ namespace NEventStore.Domain.Tests.Persistence
 
         protected override void Context()
         {
-            base.Context();
-
             _storeEvents = Wireup.Init().UsingInMemoryPersistence().Build();
             _repository1 = new EventStoreRepository(_storeEvents, new AggregateFactory(), new ConflictDetector());
             _repository2 = new EventStoreRepository(_storeEvents, new AggregateFactory(), new ConflictDetector());
@@ -372,15 +376,14 @@ namespace NEventStore.Domain.Tests.Persistence
             _aggregateId = Guid.NewGuid();
         }
 
-
-        protected override void Because()
+        protected override async Task BecauseAsync()
         {
             var agg1 = new TestAggregate(_aggregateId, "one");
             var agg2 = new TestAggregate(_aggregateId, "two");
 
-            _repository1!.Save(agg1, Guid.NewGuid());
+            await _repository1!.SaveAsync(agg1, Guid.NewGuid()).ConfigureAwait(false);
 
-            _thrown = Catch.Exception(() => _repository2!.Save(agg2, Guid.NewGuid()));
+            _thrown = await Catch.ExceptionAsync(() => _repository2!.SaveAsync(agg2, Guid.NewGuid())).ConfigureAwait(false);
         }
 
         [Fact]
@@ -396,29 +399,29 @@ namespace NEventStore.Domain.Tests.Persistence
         private TestAggregate? _reloadedAggregate;
         private Guid _id;
 
-        protected override void Context()
+        protected override Task ContextAsync()
         {
             base.Context();
             _id = Guid.NewGuid();
             _testAggregate = new TestAggregate(_id, "Test");
-            _repository!.Save(_testAggregate, Guid.NewGuid()); //save at version 1.
+            return _repository!.SaveAsync(_testAggregate, Guid.NewGuid()); //save at version 1.
         }
 
-        protected override void Because()
+        protected override async Task BecauseAsync()
         {
             var otherRepository = CreateRepository();
-            var aggregate = otherRepository.GetById<TestAggregate>(_id); //load at version 1
+            var aggregate = await otherRepository.GetByIdAsync<TestAggregate>(_id).ConfigureAwait(false); //load at version 1
             aggregate.ChangeName("Name changed");
-            otherRepository.Save(Bucket.Default, aggregate, Guid.NewGuid()); //save in version 2
+            await otherRepository.SaveAsync(Bucket.Default, aggregate, Guid.NewGuid()).ConfigureAwait(false); //save in version 2
             //Now save the snapshot.
 
             var memento = ((IAggregate)aggregate).GetSnapshot();
             var snapshot = new Snapshot(Bucket.Default, aggregate.Id.ToString(), aggregate.Version, memento!);
 
-            _storeEvents!.Advanced.AddSnapshot(snapshot);
+            await _storeEvents!.Advanced.AddSnapshotAsync(snapshot, CancellationToken.None).ConfigureAwait(false);
 
             //now reload, 
-            _reloadedAggregate = otherRepository.GetById<TestAggregate>(_id);
+            _reloadedAggregate = await otherRepository.GetByIdAsync<TestAggregate>(_id).ConfigureAwait(false);
         }
 
         [Fact]

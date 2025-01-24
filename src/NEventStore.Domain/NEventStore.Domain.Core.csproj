@@ -1,50 +1,88 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFrameworks>netstandard2.0;net462</TargetFrameworks>
-    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
-    <RootNamespace>NEventStore.Domain</RootNamespace>
-    <AssemblyName>NEventStore.Domain</AssemblyName>
-  </PropertyGroup>
+    <PropertyGroup>
+        <TargetFrameworks>netstandard2.0;net462</TargetFrameworks>
+        <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+        <RootNamespace>NEventStore.Domain</RootNamespace>
+        <AssemblyName>NEventStore.Domain</AssemblyName>
+    </PropertyGroup>
 
-  <PropertyGroup>
-    <PackageId>NEventStore.Domain</PackageId>
-    <Title>NEventStore Domain</Title>
-    <Authors>NEventStore Dev Team</Authors>
-    <PackageProjectUrl>http://neventstore.org</PackageProjectUrl>
-    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
-    <Description>A recipe for implementing event sourced domain objects with NEventStore.</Description>
-    <PackageTags>events, event sourcing, cqrs, storage, persistence, database</PackageTags>
-    <PackageReleaseNotes></PackageReleaseNotes>
-    <GenerateDocumentationFile>True</GenerateDocumentationFile>
-  </PropertyGroup>
+    <PropertyGroup>
+        <PackageId>NEventStore.Domain</PackageId>
+        <Title>NEventStore Domain</Title>
+        <Authors>NEventStore Dev Team</Authors>
+        <PackageProjectUrl>http://neventstore.org</PackageProjectUrl>
+        <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+        <Description>A recipe for implementing event sourced domain objects with NEventStore.</Description>
+        <PackageTags>events, event sourcing, cqrs, storage, persistence, database</PackageTags>
+        <PackageReleaseNotes></PackageReleaseNotes>
+        <GenerateDocumentationFile>True</GenerateDocumentationFile>
+        <DebugSymbols>true</DebugSymbols>
+        <IncludeSymbols>true</IncludeSymbols>
+        <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+        <Deterministic>true</Deterministic>
+        <EmbedUntrackedSources>true</EmbedUntrackedSources>
+        <ContinuousIntegrationBuild Condition="'$(TF_BUILD)' == 'true'">True</ContinuousIntegrationBuild>
+        <ContinuousIntegrationBuild Condition="'$(GITHUB_ACTIONS)' == 'true'">True</ContinuousIntegrationBuild>
+        <Copyright>NEventStore Dev Team</Copyright>
+        <PackageIcon>icon.png</PackageIcon>
+        <PackageReadmeFile>Readme.md</PackageReadmeFile>
+        <RepositoryUrl>https://github.com/NEventStore/NEventStore.Domain.git</RepositoryUrl>
+        <RepositoryType>git</RepositoryType>
+        <PackageLicenseFile>license.txt</PackageLicenseFile>
+        <EnforceCodeStyleInBuild>True</EnforceCodeStyleInBuild>
+        <EnableNETAnalyzers>True</EnableNETAnalyzers>
+        <AnalysisLevel>latest-recommended</AnalysisLevel>
+    </PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <DefineConstants>TRACE;DEBUG</DefineConstants>
-  </PropertyGroup>
+    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+        <DefineConstants>TRACE;DEBUG</DefineConstants>
+    </PropertyGroup>
 
-  <ItemGroup>
-    <Compile Include="..\AssemblyInfo.cs" Link="Properties\AssemblyInfo.cs" />
-  </ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+    </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\..\dependencies\NEventStore\src\NEventStore\NEventStore.Core.csproj" />
-  </ItemGroup>
+    <ItemGroup>
+        <Compile Include="..\AssemblyInfo.cs" Link="Properties\AssemblyInfo.cs" />
+    </ItemGroup>
+    <ItemGroup>
+        <None Include="..\..\icon.png">
+            <Pack>True</Pack>
+            <PackagePath>\</PackagePath>
+        </None>
+        <None Include="..\..\license.txt">
+            <Pack>True</Pack>
+            <PackagePath>\</PackagePath>
+        </None>
+        <None Include="..\..\Readme.md">
+            <Pack>True</Pack>
+            <PackagePath>\</PackagePath>
+        </None>
+        <None Include="..\CustomDictionary.xml" Link="Properties\CustomDictionary.xml" />
+    </ItemGroup>
 
-  <ItemGroup>
-    <Compile Update="Persistence\EventStore\ExceptionMessages.Designer.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>ExceptionMessages.resx</DependentUpon>
-    </Compile>
-  </ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\..\dependencies\NEventStore\src\NEventStore\NEventStore.Core.csproj" />
+    </ItemGroup>
 
-  <ItemGroup>
-    <EmbeddedResource Update="Persistence\EventStore\ExceptionMessages.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>ExceptionMessages.Designer.cs</LastGenOutput>
-      <CustomToolNamespace>NEventStore.Domain.Persistence.EventStore</CustomToolNamespace>
-    </EmbeddedResource>
-  </ItemGroup>
+    <ItemGroup>
+        <Compile Update="Persistence\EventStore\ExceptionMessages.Designer.cs">
+            <DesignTime>True</DesignTime>
+            <AutoGen>True</AutoGen>
+            <DependentUpon>ExceptionMessages.resx</DependentUpon>
+        </Compile>
+    </ItemGroup>
+
+    <ItemGroup>
+        <EmbeddedResource Update="Persistence\EventStore\ExceptionMessages.resx">
+            <Generator>ResXFileCodeGenerator</Generator>
+            <LastGenOutput>ExceptionMessages.Designer.cs</LastGenOutput>
+            <CustomToolNamespace>NEventStore.Domain.Persistence.EventStore</CustomToolNamespace>
+        </EmbeddedResource>
+    </ItemGroup>
 
 </Project>
