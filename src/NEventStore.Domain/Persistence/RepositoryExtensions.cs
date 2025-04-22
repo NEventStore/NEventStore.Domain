@@ -17,19 +17,19 @@
             return repository.GetById<TAggregate>(bucketId, id, int.MaxValue);
         }
 
-        public static void Save(this IRepository repository, IAggregate aggregate, Guid commitId, Action<IDictionary<string, object>>? updateHeaders)
+        public static ICommit? Save(this IRepository repository, IAggregate aggregate, Guid commitId, Action<IDictionary<string, object>>? updateHeaders)
         {
-            repository.Save(Bucket.Default, aggregate, commitId, updateHeaders);
+            return repository.Save(Bucket.Default, aggregate, commitId, updateHeaders);
         }
 
-        public static void Save(this IRepository repository, IAggregate aggregate, Guid commitId)
+        public static ICommit? Save(this IRepository repository, IAggregate aggregate, Guid commitId)
         {
-            repository.Save(aggregate, commitId, null);
+            return repository.Save(aggregate, commitId, null);
         }
 
-        public static void Save(this IRepository repository, string bucketId, IAggregate aggregate, Guid commitId)
+        public static ICommit? Save(this IRepository repository, string bucketId, IAggregate aggregate, Guid commitId)
         {
-            repository.Save(bucketId, aggregate, commitId, null);
+            return repository.Save(bucketId, aggregate, commitId, null);
         }
 
         public static Task<TAggregate> GetByIdAsync<TAggregate>(this IRepository repository, Guid id, CancellationToken cancellationToken = default) where TAggregate : class, IAggregate
@@ -47,17 +47,17 @@
             return repository.GetByIdAsync<TAggregate>(bucketId, id, int.MaxValue, cancellationToken);
         }
 
-        public static Task SaveAsync(this IRepository repository, IAggregate aggregate, Guid commitId, Action<IDictionary<string, object>>? updateHeaders, CancellationToken cancellationToken = default)
+        public static Task<ICommit?> SaveAsync(this IRepository repository, IAggregate aggregate, Guid commitId, Action<IDictionary<string, object>>? updateHeaders, CancellationToken cancellationToken = default)
         {
             return repository.SaveAsync(Bucket.Default, aggregate, commitId, updateHeaders, cancellationToken);
         }
 
-        public static Task SaveAsync(this IRepository repository, IAggregate aggregate, Guid commitId, CancellationToken cancellationToken = default)
+        public static Task<ICommit?> SaveAsync(this IRepository repository, IAggregate aggregate, Guid commitId, CancellationToken cancellationToken = default)
         {
             return repository.SaveAsync(aggregate, commitId, null, cancellationToken);
         }
 
-        public static Task SaveAsync(this IRepository repository, string bucketId, IAggregate aggregate, Guid commitId, CancellationToken cancellationToken = default)
+        public static Task<ICommit?> SaveAsync(this IRepository repository, string bucketId, IAggregate aggregate, Guid commitId, CancellationToken cancellationToken = default)
         {
             return repository.SaveAsync(bucketId, aggregate, commitId, null, cancellationToken);
         }

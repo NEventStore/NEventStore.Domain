@@ -40,6 +40,7 @@ namespace NEventStore.Domain.Tests.Persistence
     public class when_an_aggregate_is_persisted : using_a_configured_repository
     {
         private TestAggregate? _testAggregate;
+        private ICommit? _commit;
 
         private Guid _id;
 
@@ -52,7 +53,13 @@ namespace NEventStore.Domain.Tests.Persistence
 
         protected override void Because()
         {
-            _repository!.Save(_testAggregate!, Guid.NewGuid(), null);
+            _commit = _repository!.Save(_testAggregate!, Guid.NewGuid(), null);
+        }
+
+        [Fact]
+        public void should_return_the_persisted_commit()
+        {
+            _commit.Should().NotBeNull();
         }
 
         [Fact]
@@ -85,6 +92,7 @@ namespace NEventStore.Domain.Tests.Persistence
         private Guid _id;
 
         private const string NewName = "UpdatedName";
+        private ICommit? _commit;
 
         protected override void Context()
         {
@@ -97,7 +105,15 @@ namespace NEventStore.Domain.Tests.Persistence
         {
             var aggregate = _repository!.GetById<TestAggregate>(_id);
             aggregate.ChangeName(NewName);
-            _repository!.Save(aggregate, Guid.NewGuid(), null);
+            _commit = _repository!.Save(aggregate, Guid.NewGuid(), null);
+        }
+
+        [Fact]
+        public void should_return_the_persisted_commit()
+        {
+            _commit.Should().NotBeNull();
+            _commit!.Events.Count.Should().Be(1);
+            _commit.Events.First().Body.Should().BeOfType<NameChangedEvent>();
         }
 
         [Fact]
@@ -148,7 +164,8 @@ namespace NEventStore.Domain.Tests.Persistence
 
         private Guid _id;
 
-        private string _bucket = "TenantB";
+        private readonly string _bucket = "TenantB";
+        private ICommit? _commit;
 
         protected override void Context()
         {
@@ -159,7 +176,14 @@ namespace NEventStore.Domain.Tests.Persistence
 
         protected override void Because()
         {
-            _repository!.Save(_bucket, _testAggregate!, Guid.NewGuid(), null);
+            _commit = _repository!.Save(_bucket, _testAggregate!, Guid.NewGuid(), null);
+        }
+
+        [Fact]
+        public void should_return_the_persisted_commit()
+        {
+            _commit.Should().NotBeNull();
+            _commit!.BucketId.Should().Be(_bucket);
         }
 
         [Fact]
@@ -180,6 +204,7 @@ namespace NEventStore.Domain.Tests.Persistence
     public class when_an_aggregate_is_persisted_using_the_same_commitId_twice : using_a_configured_repository
     {
         private TestAggregate? _testAggregate;
+        private ICommit? _commit;
 
         private Guid _id;
 
@@ -197,7 +222,13 @@ namespace NEventStore.Domain.Tests.Persistence
 
             _testAggregate!.ChangeName("one");
 
-            _repository!.Save(_testAggregate, commitId);
+            _commit = _repository!.Save(_testAggregate, commitId);
+        }
+
+        [Fact]
+        public void persisted_commit_should_be_null()
+        {
+            _commit.Should().BeNull();
         }
 
         [Fact]
@@ -371,7 +402,6 @@ namespace NEventStore.Domain.Tests.Persistence
 
             _aggregateId = Guid.NewGuid();
         }
-
 
         protected override void Because()
         {
