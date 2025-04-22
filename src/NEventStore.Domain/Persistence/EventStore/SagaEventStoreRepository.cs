@@ -6,7 +6,7 @@ namespace NEventStore.Domain.Persistence.EventStore
     {
         private const string SagaTypeHeader = "SagaType";
 
-        private string UndispatchedMessageHeader = "UndispatchedMessage.";
+        private readonly string UndispatchedMessageHeader = "UndispatchedMessage.";
 
         private readonly IStoreEvents _eventStore;
 

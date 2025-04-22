@@ -40,6 +40,7 @@ namespace NEventStore.Domain.Tests.Persistence.Async
     public class when_an_aggregate_is_persisted : using_a_configured_repository
     {
         private TestAggregate? _testAggregate;
+        private ICommit? _commit;
 
         private Guid _id;
 
@@ -50,9 +51,15 @@ namespace NEventStore.Domain.Tests.Persistence.Async
             _testAggregate = new TestAggregate(_id, "Test");
         }
 
-        protected override Task BecauseAsync()
+        protected override async Task BecauseAsync()
         {
-            return _repository!.SaveAsync(_testAggregate!, Guid.NewGuid(), null);
+            _commit = await _repository!.SaveAsync(_testAggregate!, Guid.NewGuid(), null).ConfigureAwait(false);
+        }
+
+        [Fact]
+        public void should_return_the_persisted_commit()
+        {
+            _commit.Should().NotBeNull();
         }
 
         [Fact]
@@ -89,6 +96,7 @@ namespace NEventStore.Domain.Tests.Persistence.Async
         private Guid _id;
 
         private const string NewName = "UpdatedName";
+        private ICommit? _commit;
 
         protected override Task ContextAsync()
         {
@@ -97,11 +105,19 @@ namespace NEventStore.Domain.Tests.Persistence.Async
             return _repository!.SaveAsync(new TestAggregate(_id, "Test"), Guid.NewGuid(), null);
         }
 
-        protected override Task BecauseAsync()
+        protected override async Task BecauseAsync()
         {
-            var aggregate = _repository!.GetById<TestAggregate>(_id);
+            var aggregate = await _repository!.GetByIdAsync<TestAggregate>(_id).ConfigureAwait(false);
             aggregate.ChangeName(NewName);
-            return _repository!.SaveAsync(aggregate, Guid.NewGuid(), null);
+            _commit = await _repository!.SaveAsync(aggregate, Guid.NewGuid(), null).ConfigureAwait(false);
+        }
+
+        [Fact]
+        public void should_return_the_persisted_commit()
+        {
+            _commit.Should().NotBeNull();
+            _commit!.Events.Count.Should().Be(1);
+            _commit.Events.First().Body.Should().BeOfType<NameChangedEvent>();
         }
 
         [Fact]
@@ -155,7 +171,8 @@ namespace NEventStore.Domain.Tests.Persistence.Async
 
         private Guid _id;
 
-        private string _bucket = "TenantB";
+        private readonly string _bucket = "TenantB";
+        private ICommit? _commit;
 
         protected override void Context()
         {
@@ -164,9 +181,16 @@ namespace NEventStore.Domain.Tests.Persistence.Async
             _testAggregate = new TestAggregate(_id, "Test");
         }
 
-        protected override Task BecauseAsync()
+        protected override async Task BecauseAsync()
         {
-            return _repository!.SaveAsync(_bucket, _testAggregate!, Guid.NewGuid(), null);
+            _commit = await _repository!.SaveAsync(_bucket, _testAggregate!, Guid.NewGuid(), null).ConfigureAwait(false);
+        }
+
+        [Fact]
+        public void should_return_the_persisted_commit()
+        {
+            _commit.Should().NotBeNull();
+            _commit!.BucketId.Should().Be(_bucket);
         }
 
         [Fact]
@@ -188,6 +212,7 @@ namespace NEventStore.Domain.Tests.Persistence.Async
     public class when_an_aggregate_is_persisted_using_the_same_commitId_twice : using_a_configured_repository
     {
         private TestAggregate? _testAggregate;
+        private ICommit? _commit;
 
         private Guid _id;
 
@@ -205,7 +230,13 @@ namespace NEventStore.Domain.Tests.Persistence.Async
 
             _testAggregate!.ChangeName("one");
 
-            await _repository!.SaveAsync(_testAggregate, commitId).ConfigureAwait(false);
+            _commit = await _repository!.SaveAsync(_testAggregate, commitId).ConfigureAwait(false);
+        }
+
+        [Fact]
+        public void persisted_commit_should_be_null()
+        {
+            _commit.Should().BeNull();
         }
 
         [Fact]
