@@ -3,7 +3,7 @@
 ## 10.1.0
 
 - Updated NEventStore reference to version 10.1.0
-- `IRepository.Save` and `IRepository.SaveAsync` now return the persisted ICommit.
+- `IRepository.Save` and `IRepository.SaveAsync` now return the persisted `ICommit`.
 
 ## 10.0.0
 
