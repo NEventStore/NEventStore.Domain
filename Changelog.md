@@ -1,6 +1,6 @@
 # NEventStore.Domain Versions
 
-## vNext
+## 10.2.0
 
 - Added explicit net8.0, net9.0, net10.0 support
 - Updated NEventStore 10.2.0
