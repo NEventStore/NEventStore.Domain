@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFrameworks>netstandard2.0;net462</TargetFrameworks>
+        <TargetFrameworks>netstandard2.0;net462;$(ModernTargetFrameworks)</TargetFrameworks>
         <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
         <RootNamespace>NEventStore.Domain</RootNamespace>
         <AssemblyName>NEventStore.Domain</AssemblyName>
@@ -40,7 +40,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0">
+        <PackageReference Include="Microsoft.SourceLink.GitHub" Version="10.0.300">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>

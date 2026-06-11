@@ -18,26 +18,38 @@
         <repository type="git" url="https://github.com/NEventStore/NEventStore.Domain.git" />
         <copyright>Copyright (c) 2014 NEventStore</copyright>
         <!-- 
-    Until this is on develop branch, this version should be the previous version, so it made it compatible
-    with pre-release of the actual version. Ex, if we are on 6.0.0 unstable, dependency from NEventStore should
-    be latest stable version so it can take prerelease of 6.0.0 version.
-    With (5.4 we are telling NuGet that we need a version greater than 5.4 so we are allowing all the prerelease
-    6.x.x versions
-    -->
+        Until this is on develop branch, this version should be the previous version, so it made it
+        compatible
+        with pre-release of the actual version. Ex, if we are on 6.0.0 unstable, dependency from
+        NEventStore should
+        be latest stable version so it can take prerelease of 6.0.0 version.
+        With (5.4 we are telling NuGet that we need a version greater than 5.4 so we are allowing all the
+        prerelease
+        6.x.x versions
+        -->
         <dependencies>
             <group targetFramework=".NETFramework4.6.2">
-                <dependency id="NEventStore" version="[10.1.0, 11.0.0)" exclude="Build,Analyzers" />
+                <dependency id="NEventStore" version="[10.2.0,11.0.0)" exclude="Build,Analyzers" />
             </group>
             <group targetFramework=".NETStandard2.0">
-                <dependency id="NEventStore" version="[10.1.0, 11.0.0)" exclude="Build,Analyzers" />
+                <dependency id="NEventStore" version="[10.2.0,11.0.0)" exclude="Build,Analyzers" />
+            </group>
+            <group targetFramework=".net8.0">
+                <dependency id="NEventStore" version="[10.2.0,11.0.0)" exclude="Build,Analyzers" />
+            </group>
+            <group targetFramework=".net9.0">
+                <dependency id="NEventStore" version="[10.2.0,11.0.0)" exclude="Build,Analyzers" />
+            </group>
+            <group targetFramework=".net10.0">
+                <dependency id="NEventStore" version="[10.2.0,11.0.0)" exclude="Build,Analyzers" />
             </group>
         </dependencies>
     </metadata>
     <files>
         <!--<file src="bin\$configuration$\**" target="lib"/>-->
-        <file src="..\NEventStore.Domain\bin\$configuration$\**\NEventStore.Domain.dll" target="lib"/>
-        <file src="..\NEventStore.Domain\bin\$configuration$\**\NEventStore.Domain.xml" target="lib"/>
-        <file src="..\NEventStore.Domain\bin\$configuration$\**\NEventStore.Domain.pdb" target="lib"/>
+        <file src="..\NEventStore.Domain\bin\$configuration$\**\NEventStore.Domain.dll" target="lib" />
+        <file src="..\NEventStore.Domain\bin\$configuration$\**\NEventStore.Domain.xml" target="lib" />
+        <file src="..\NEventStore.Domain\bin\$configuration$\**\NEventStore.Domain.pdb" target="lib" />
         <file src="..\..\Readme.md" target="" />
         <file src="..\..\license.txt" target="" />
         <file src="..\..\icon.png" target="" />

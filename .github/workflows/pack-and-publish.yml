@@ -1,0 +1,100 @@
+name: Pack and Publish
+
+on:
+  workflow_dispatch:
+    inputs:
+      branch:
+        description: Branch or ref to pack (branch name or tag)
+        required: true
+        type: string
+        default: master
+      publish:
+        description: Publish packages to NuGet
+        required: true
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+
+jobs:
+  pack-and-publish:
+    name: Pack and optional Publish
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+        with:
+          ref: ${{ inputs.branch }}
+          fetch-depth: 0
+          submodules: recursive
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: |
+            6.0.x
+            8.0.x
+            9.0.x
+            10.0.x
+
+      - name: Cache NuGet packages
+        uses: actions/cache@v5
+        with:
+          path: ~/.nuget/packages
+          key: nuget-${{ runner.os }}-${{ hashFiles('**/*.csproj', '**/*.props', '**/*.targets', '.config/dotnet-tools.json') }}
+          restore-keys: |
+            nuget-${{ runner.os }}-
+
+      - name: Restore dotnet tools
+        run: dotnet tool restore
+
+      - name: Restore NuGet packages
+        run: dotnet restore ./src/NEventStore.Domain.Core.sln --verbosity m
+
+      - name: Run GitVersion
+        id: gitversion
+        shell: pwsh
+        run: |
+          $gitVersion = dotnet tool run dotnet-gitversion /targetpath "${{ github.workspace }}" /output json /updateAssemblyInfo | ConvertFrom-Json
+          dotnet tool run dotnet-gitversion /targetpath "${{ github.workspace }}/dependencies/NEventStore" /updateAssemblyInfo | Out-Null
+          "semver=$($gitVersion.SemVer)" >> $env:GITHUB_OUTPUT
+
+      - name: Build
+        run: dotnet build ./src/NEventStore.Domain.Core.sln -c Release --no-restore /p:ContinuousIntegrationBuild=True
+
+      - name: Pack
+        shell: pwsh
+        run: |
+          $semver = '${{ steps.gitversion.outputs.semver }}'
+          New-Item -Path artifacts -ItemType Directory -Force | Out-Null
+          nuget pack ./src/.nuget/NEventStore.Domain.nuspec -properties "version=$semver;configuration=Release" -OutputDirectory artifacts -Symbols -SymbolPackageFormat snupkg
+
+      - name: Upload NuGet artifacts
+        uses: actions/upload-artifact@v7
+        with:
+          name: nuget-packages-${{ steps.gitversion.outputs.semver }}
+          path: artifacts/**/*.nupkg
+          if-no-files-found: error
+
+      - name: Publish to NuGet
+        if: ${{ inputs.publish }}
+        shell: pwsh
+        env:
+          NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
+        run: |
+          if ([string]::IsNullOrWhiteSpace($env:NUGET_API_KEY)) {
+            throw 'NUGET_API_KEY secret is required to publish packages.'
+          }
+
+          Get-ChildItem -Path artifacts -Filter *.nupkg -Recurse |
+            Where-Object { $_.Name -notlike '*.symbols.nupkg' } |
+            ForEach-Object {
+              dotnet nuget push $_.FullName --api-key $env:NUGET_API_KEY --source https://api.nuget.org/v3/index.json --skip-duplicate
+            }
+
+          Get-ChildItem -Path artifacts -Filter *.snupkg -Recurse |
+            ForEach-Object {
+              dotnet nuget push $_.FullName --api-key $env:NUGET_API_KEY --source https://api.nuget.org/v3/index.json --skip-duplicate
+            }

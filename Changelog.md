@@ -1,5 +1,14 @@
 # NEventStore.Domain Versions
 
+## vNext
+
+- Added explicit net8.0, net9.0, net10.0 support
+- Updated NEventStore 10.2.0
+
+### Breaking Changes
+
+- Minimum NEventStore version is now 10.2.0, older versions are not supported.
+
 ## 10.1.0
 
 - Updated NEventStore reference to version 10.1.0

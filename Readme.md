@@ -7,14 +7,17 @@ NEventStore.Domain currently supports:
 
 - .net framework 4.6.2
 - .net standard 2.0
+- .net8.0
+- .net9.0
+- .net10.0
 
 Build Status
 ===
 
 Branches:
 
-- master [![Build status](https://ci.appveyor.com/api/projects/status/fx08cfosfajnq6np/branch/master?svg=true)](https://ci.appveyor.com/project/AGiorgetti/neventstore-domain/branch/master)
-- develop [![Build status](https://ci.appveyor.com/api/projects/status/fx08cfosfajnq6np/branch/develop?svg=true)](https://ci.appveyor.com/project/AGiorgetti/neventstore-domain/branch/develop)
+- master [![master](https://github.com/NEventStore/NEventStore.Domain/actions/workflows/ci.yml/badge.svg?branch=master)](https://github.com/NEventStore/NEventStore.Domain/actions/workflows/ci.yml)
+- develop [![develop](https://github.com/NEventStore/NEventStore.Domain/actions/workflows/ci.yml/badge.svg?branch=develop)](https://github.com/NEventStore/NEventStore.Domain/actions/workflows/ci.yml)
 
 Information
 ===

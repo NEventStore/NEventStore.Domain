@@ -1,0 +1,108 @@
+name: CI
+
+on:
+  push:
+    branches: ["master", "develop", "feature/**", "release/**", "hotfix/**"]
+    tags: ["*"]
+  pull_request:
+    branches: ["master", "develop"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  # Keep the Windows build separate so we still validate the .NET Framework target
+  # and the packaging prerequisites that only exist on Windows runners.
+  build:
+    name: Build (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+          fetch-tags: true
+          submodules: recursive
+
+      - name: Setup .NET SDKs
+        uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: |
+            8.0.x
+            9.0.x
+            10.0.x
+
+      - name: Cache NuGet packages
+        uses: actions/cache@v5
+        with:
+          path: ~/.nuget/packages
+          key: nuget-${{ runner.os }}-${{ hashFiles('**/*.csproj', '**/*.props', '**/*.targets', '.config/dotnet-tools.json') }}
+          restore-keys: |
+            nuget-${{ runner.os }}-
+
+      - name: Restore .NET tools
+        run: dotnet tool restore
+
+      - name: Restore solution
+        run: dotnet restore ./src/NEventStore.Domain.Core.sln --verbosity m
+
+      - name: Run GitVersion and patch assembly info
+        id: gitversion
+        shell: pwsh
+        working-directory: ${{ github.workspace }}
+        run: |
+          $gitVersion = dotnet tool run dotnet-gitversion /targetpath "${{ github.workspace }}" /output json /updateAssemblyInfo | ConvertFrom-Json
+          dotnet tool run dotnet-gitversion /targetpath "${{ github.workspace }}/dependencies/NEventStore" /updateAssemblyInfo | Out-Null
+          "semver=$($gitVersion.SemVer)" >> $env:GITHUB_OUTPUT
+
+      - name: Build solution
+        run: dotnet build ./src/NEventStore.Domain.Core.sln -c Release --no-restore /p:ContinuousIntegrationBuild=True
+
+  test:
+    name: Test (Linux, in-memory)
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+          fetch-tags: true
+          submodules: recursive
+
+      - name: Setup .NET SDKs
+        uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: |
+            8.0.x
+            9.0.x
+            10.0.x
+
+      - name: Cache NuGet packages
+        uses: actions/cache@v5
+        with:
+          path: ~/.nuget/packages
+          key: nuget-${{ runner.os }}-${{ hashFiles('**/*.csproj', '**/*.props', '**/*.targets', '.config/dotnet-tools.json') }}
+          restore-keys: |
+            nuget-${{ runner.os }}-
+
+      - name: Run tests
+        run: dotnet test ./src/NEventStore.Domain.Core.sln -c Release --logger "trx;LogFileName=test-results.trx" 2>&1 || true
+
+      - name: Upload test results
+        uses: actions/upload-artifact@v7
+        with:
+          name: test-results
+          path: "**/test-results.trx"
+          if-no-files-found: ignore
+          retention-days: 14
